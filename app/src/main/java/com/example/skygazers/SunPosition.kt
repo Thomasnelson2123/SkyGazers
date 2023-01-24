@@ -2,6 +2,15 @@ package com.example.skygazers
 
 import java.util.*
 
+// how to use:
+// first, initialize SunPosition class. Give it the users latitutde, longitude, and timezone
+// use UTC timezone. Example: Bellingham is -8 UTC, so for bellingham we would pass it -8
+
+// then there are 3 functions you can call:
+// calculateSunPosition, getSunrise, and getSunset
+// all require the same arguments: pass in integer values representing the year, month, day, hour, and minute
+// calculateSunPosition returns a doublearray: first item is the elevation, second is the azimuth
+// getSunrise and getSunset both return an intarray; first item is the hour, second is the minute
 class SunPosition(private val lat: Double, private val lon: Double, private val tz: Int) {
     private var jd = 0.0
     private var jc = 0.0
@@ -44,8 +53,7 @@ class SunPosition(private val lat: Double, private val lon: Double, private val 
         month: Int,
         day: Int,
         hour: Int,
-        minute: Int,
-        tz: Int
+        minute: Int
     ): DoubleArray {
         calculateCommon(year, month, day, hour, minute, tz)
         tst = trueSolarTime((hour * 60 + minute) / 1440.0, eot, lon, tz.toDouble())
@@ -63,8 +71,7 @@ class SunPosition(private val lat: Double, private val lon: Double, private val 
         month: Int,
         day: Int,
         hour: Int,
-        minute: Int,
-        tz: Int
+        minute: Int
     ): IntArray {
         calculateCommon(year, month, day, hour, minute, tz)
         val sn = solarNoon(eot)
@@ -78,8 +85,7 @@ class SunPosition(private val lat: Double, private val lon: Double, private val 
         month: Int,
         day: Int,
         hour: Int,
-        minute: Int,
-        tz: Int
+        minute: Int
     ): IntArray {
         calculateCommon(year, month, day, hour, minute, tz)
         val sn = solarNoon(eot)
