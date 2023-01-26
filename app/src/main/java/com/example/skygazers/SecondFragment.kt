@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
@@ -15,7 +16,7 @@ import com.example.skygazers.databinding.FragmentSecondBinding
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
-    private val viewModel: SecondActivityViewModel by viewModels()
+    private val viewModel: SecondActivityViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
