@@ -48,7 +48,7 @@ class SecondActivity : AppCompatActivity() {
                     LocationCallback() {
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        viewModel.updateLatLong("Lat: ${location.latitude}, Long: ${location.longitude}")
+                        viewModel.updateLatLong(location)
                     }
                 },
                 Looper.getMainLooper()
@@ -75,7 +75,7 @@ class SecondActivity : AppCompatActivity() {
                     LocationCallback() {
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        viewModel.updateLatLong("Lat: ${location.latitude}, Long: ${location.longitude}")
+                        viewModel.updateLatLong(location)
                     }
                 },
                 Looper.getMainLooper()
