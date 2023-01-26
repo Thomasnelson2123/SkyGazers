@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
 
@@ -14,6 +15,7 @@ import com.example.skygazers.databinding.FragmentSecondBinding
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
+    private val viewModel: SecondActivityViewModel by viewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,6 +36,10 @@ class SecondFragment : Fragment() {
 
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        }
+
+        viewModel.listenLatLong().observe(viewLifecycleOwner) {
+            binding.textviewSecond.text = it
         }
     }
 

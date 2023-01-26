@@ -5,14 +5,20 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationRequest;
 
 class SecondActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val viewModel: SecondActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,27 +35,52 @@ class SecondActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ), 1
+            )
             return
+        } else {
+            fusedLocationClient.requestLocationUpdates(
+                LocationRequest.create(), object :
+                    LocationCallback() {
+                    override fun onLocationResult(p0: LocationResult) {
+                        val location = p0.lastLocation
+                        viewModel.updateLatLong("Lat: ${location.latitude}, Long: ${location.longitude}")
+                    }
+                },
+                Looper.getMainLooper()
+            )
         }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                // Got last known location. In some rare situations this can be null.
-            }
+    }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.requestLocationUpdates(
+                LocationRequest.create(), object :
+                    LocationCallback() {
+                    override fun onLocationResult(p0: LocationResult) {
+                        val location = p0.lastLocation
+                        viewModel.updateLatLong("Lat: ${location.latitude}, Long: ${location.longitude}")
+                    }
+                },
+                Looper.getMainLooper()
+            )
+        }
 
-        val datePrint = findViewById<TextView>(R.id.thisDate)
-
-        val yr = intent?.extras?.getString("year").toString().toInt()
-        val mth = intent?.extras?.getString("month").toString().toInt() +1
-        val dy = intent?.extras?.getString("day").toString().toInt()
-        val string = "date: $dy - $mth - $yr"
-        datePrint.text = string
     }
 }

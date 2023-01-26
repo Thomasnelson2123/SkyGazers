@@ -5,10 +5,3 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 
 }
-apply plugin: 'com.android.application'
-
-
-
-dependencies {
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-}
