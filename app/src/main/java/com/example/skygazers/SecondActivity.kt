@@ -25,6 +25,10 @@ class SecondActivity : AppCompatActivity() {
         setContentView(R.layout.activity_second)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val year = intent?.extras?.getString("year").toString().toInt()
+        val month = intent?.extras?.getString("month").toString().toInt()
+        val day = intent?.extras?.getString("day").toString().toInt()
+
 
         //get latitude and longitude
         if (ActivityCompat.checkSelfPermission(
@@ -48,7 +52,7 @@ class SecondActivity : AppCompatActivity() {
                     LocationCallback() {
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        viewModel.updateLatLong(location)
+                        viewModel.updateLatLong(location, year, month, day)
                     }
                 },
                 Looper.getMainLooper()
@@ -62,6 +66,11 @@ class SecondActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        val year = intent?.extras?.getString("year").toString().toInt()
+        val month = intent?.extras?.getString("month").toString().toInt()
+        val day = intent?.extras?.getString("day").toString().toInt()
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -75,7 +84,7 @@ class SecondActivity : AppCompatActivity() {
                     LocationCallback() {
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        viewModel.updateLatLong(location)
+                        viewModel.updateLatLong(location, year, month, day)
                     }
                 },
                 Looper.getMainLooper()
