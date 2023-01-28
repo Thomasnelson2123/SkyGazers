@@ -1,6 +1,8 @@
 package com.example.skygazers
 
 import android.location.Location
+import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,4 +43,11 @@ class SecondActivityViewModel: ViewModel() {
     fun listenLatLong(): LiveData<String> {
         return _latLong
     }
+
+    /*fun createImgOverlay(x: Int, y: Int) {
+        var params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,100);
+        params.leftMargin = x;
+        params.topMargin = y;
+
+    }*/
 }

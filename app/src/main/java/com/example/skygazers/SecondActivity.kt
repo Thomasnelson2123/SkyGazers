@@ -6,6 +6,8 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -28,7 +30,6 @@ class SecondActivity : AppCompatActivity() {
         val year = intent?.extras?.getString("year").toString().toInt()
         val month = intent?.extras?.getString("month").toString().toInt()
         val day = intent?.extras?.getString("day").toString().toInt()
-
 
         //get latitude and longitude
         if (ActivityCompat.checkSelfPermission(

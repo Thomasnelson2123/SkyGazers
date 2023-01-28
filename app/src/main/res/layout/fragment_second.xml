@@ -6,14 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
 
+
+    <ImageView
+        android:id="@+id/sunView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="-50dp"
+        android:layout_marginTop="-50dp"
+        android:layout_marginEnd="-50dp"
+        android:layout_marginBottom="-50dp"
+        android:src="@drawable/sun"
+        app:layout_constraintBottom_toBottomOf="@id/posLoopButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.653" />
+
     <TextView
         android:id="@+id/textview_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/button_second"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/posLoopButton"
+        android:layout_width="135dp"
+        android:layout_height="49dp"
+        android:text="Start Loop"
+        app:layout_constraintBottom_toTopOf="@+id/sunView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.048" />
 
     <Button
         android:id="@+id/button_second"
@@ -24,4 +53,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textview_second" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
