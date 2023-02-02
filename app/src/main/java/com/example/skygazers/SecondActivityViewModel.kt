@@ -18,17 +18,17 @@ class SecondActivityViewModel: ViewModel() {
 
         var string = ""
 
-        if(sunrise[1] < 10) {
+        if(sunrise[1] < 10 && sunset[1] < 10) {
+            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
+                    "Sunrise: " + sunrise[0] + ":0" + sunrise[1] + "\nSunset: " + sunset[0] + ":0" + sunset[1]
+        }
+        else if(sunrise[1] < 10) {
             string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
                     "Sunrise: " + sunrise[0] + ":0" + sunrise[1] + "\nSunset: " + sunset[0] + ":" + sunset[1]
         }
         else if(sunset[1] < 10) {
             string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
                     "Sunrise: " + sunrise[0] + ":" + sunrise[1] + "\nSunset: " + sunset[0] + ":0" + sunset[1]
-        }
-        else if(sunrise[1] < 10 && sunset[1] < 10) {
-            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
-                    "Sunrise: " + sunrise[0] + ":0" + sunrise[1] + "\nSunset: " + sunset[0] + ":0" + sunset[1]
         }
         else {
             string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
