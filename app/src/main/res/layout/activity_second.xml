@@ -8,6 +8,11 @@
     android:orientation="vertical"
     tools:context=".SecondActivity">
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view_tag"
         android:layout_height="match_parent"
