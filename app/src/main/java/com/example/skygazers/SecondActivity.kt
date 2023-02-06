@@ -51,9 +51,6 @@ class SecondActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Log.d("checking permissions", "requesting permissions")
@@ -61,8 +58,7 @@ class SecondActivity : AppCompatActivity() {
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.CAMERA
-                ), 100
+                ), 1
             )
             return
         } else {
@@ -76,43 +72,11 @@ class SecondActivity : AppCompatActivity() {
 //                },
 //                Looper.getMainLooper()
 //            )
-            startCamera()
         }
 
-        cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
-                }
-
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview)
-
-            } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-            }
-
-        }, ContextCompat.getMainExecutor(this))
-    }
 
 
     override fun onRequestPermissionsResult(
@@ -126,19 +90,18 @@ class SecondActivity : AppCompatActivity() {
 //        val month = intent?.extras?.getString("month").toString().toInt()
 //        val day = intent?.extras?.getString("day").toString().toInt()
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.CAMERA
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
 
-            startCamera()
 //            fusedLocationClient.requestLocationUpdates(
 //                LocationRequest.create(), object :
 //                    LocationCallback() {
@@ -149,7 +112,7 @@ class SecondActivity : AppCompatActivity() {
 //                },
 //                Looper.getMainLooper()
 //            )
-        }
+//        }
 
     }
 
