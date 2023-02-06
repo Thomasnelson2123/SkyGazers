@@ -37,7 +37,7 @@ class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivitySecondBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_second)
+        setContentView(viewBinding.root)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 //        val year = intent?.extras?.getString("year").toString().toInt()
