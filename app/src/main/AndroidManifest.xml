@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SENSOR_SERVICE"/>
     <!--
  Limits app visibility in the Google Play Store to ARCore supported devices
          (https://developers.google.com/ar/devices).
