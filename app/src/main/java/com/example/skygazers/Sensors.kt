@@ -3,6 +3,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.SensorManager.getOrientation
+import android.hardware.SensorManager.getRotationMatrix
 
 class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     private lateinit var accelerometer: Sensor
@@ -40,6 +42,19 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+    }
+
+    fun getOrientationValues() : FloatArray {
+        var values = FloatArray(3)
+        var R = FloatArray(9)
+        var I = FloatArray(9)
+        getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
+        getOrientation(R, values)
+        values[0] = values[0] * (360 / (2 * (Math.PI))).toFloat()
+        values[1] = values[1] * (360 / (2 * (Math.PI))).toFloat()
+        values[2] = values[2] * (360 / (2 * (Math.PI))).toFloat()
+
+        return values
     }
 
 

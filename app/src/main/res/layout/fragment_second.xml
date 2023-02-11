@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/textview_second" />
 
     <TextView
-        android:id="@+id/accelerometer_values_text_view"
+        android:id="@+id/orientation_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/button_second"
@@ -35,12 +35,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview_second" />
 
-    <TextView
-        android:id="@+id/magnetic_field_values_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/button_second"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accelerometer_values_text_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

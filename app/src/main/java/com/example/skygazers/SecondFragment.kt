@@ -80,10 +80,12 @@ class SecondFragment : Fragment() {
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 Handler(Looper.getMainLooper()).post {
-                    var accValues = sensor.getAccelerometerValues()
-                    binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
-                    var magValues = sensor.getMagneticFieldValues()
-                    binding.magneticFieldValuesTextView.text = "x: " + magValues[0] + " y: " + magValues[1] + " z: " + magValues[2]
+                    var orientation = sensor.getOrientationValues()
+                    binding.orientationTextView.text = "az: " + orientation[0] + " pitch: " + orientation[1] + " roll: " + orientation[2]
+                    //var accValues = sensor.getAccelerometerValues()
+                    //binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
+                    //var magValues = sensor.getMagneticFieldValues()
+                    //binding.magneticFieldValuesTextView.text = "x: " + magValues[0] + " y: " + magValues[1] + " z: " + magValues[2]
                 }
             }
         }, 0, 1000)
