@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import android.widget.SeekBar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
@@ -39,6 +40,28 @@ class SecondFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
+        val seek = binding.seekBar;
+        seek?.setOnSeekBarChangeListener(object:
+        SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val curTime =seekBar?.progress.toString()
+                binding.curNum.text = curTime
+                val pos = viewModel.updateTime(curTime.toInt())
+                binding.curAzimuth.text= pos.get(1).toString()
+                binding.curElevation.text= pos.get(0).toString()
+
+
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+
         viewModel.listenLatLong().observe(viewLifecycleOwner) {
             binding.textviewSecond.text = it
         }
@@ -49,3 +72,4 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 }
+
