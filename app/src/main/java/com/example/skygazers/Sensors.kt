@@ -3,8 +3,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.hardware.SensorManager.getOrientation
-import android.hardware.SensorManager.getRotationMatrix
+import android.hardware.SensorManager.*
+import kotlin.math.abs
 
 class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     private lateinit var accelerometer: Sensor
@@ -48,12 +48,18 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
         var values = FloatArray(3)
         var R = FloatArray(9)
         var I = FloatArray(9)
+        var outR = FloatArray(9)
         getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
-        getOrientation(R, values)
+
+        remapCoordinateSystem(R, AXIS_X, AXIS_Z, outR)
+        getOrientation(outR, values)
         values[0] = values[0] * (360 / (2 * (Math.PI))).toFloat()
         values[1] = values[1] * (360 / (2 * (Math.PI))).toFloat()
         values[2] = values[2] * (360 / (2 * (Math.PI))).toFloat()
 
+
+//        val convert = {value: Float, degree: Int -> if (value < 0) {abs(value) + degree} else value}
+//        values[0] = convert(values[0], 180)
         return values
     }
 

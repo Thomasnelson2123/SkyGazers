@@ -24,13 +24,13 @@ class SecondActivityViewModel: ViewModel() {
     fun updateLatLong(loc: Location, year: Int, month: Int, day: Int,) {
         this.loc = loc
         this.year = year
-        this.month = month
+        this.month = month + 1
         this.day = day
 
         this.sunPosition = SunPosition(loc.latitude, loc.longitude, -8)
-        this.elevAzimuth = sunPosition.calculateSunPosition(year, month+1, day, 12, 15)
-        this.sunrise = sunPosition.getSunrise(year, month+1, day, 12, 15)
-        this.sunset = sunPosition.getSunset(year, month+1, day, 12, 15)
+        this.elevAzimuth = sunPosition.calculateSunPosition(year, month, day, 12, 15)
+        this.sunrise = sunPosition.getSunrise(year, month, day, 12, 15)
+        this.sunset = sunPosition.getSunset(year, month, day, 12, 15)
 
         var string = ""
 
