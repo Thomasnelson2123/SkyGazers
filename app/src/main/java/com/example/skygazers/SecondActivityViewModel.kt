@@ -11,12 +11,26 @@ import java.util.Calendar
 class SecondActivityViewModel: ViewModel() {
 
     private val _latLong = MutableLiveData<String>()
+    var loc : Location? = null
+    var year:Int = 0
+    var month: Int = 0
+    var day: Int = 0
+    lateinit var sunPosition: SunPosition
+    lateinit var elevAzimuth: DoubleArray
+    lateinit var sunrise: IntArray
+    lateinit var sunset: IntArray
 
-    fun updateLatLong(loc: Location, year: Int, month: Int, day: Int) {
-        val sunPosition = SunPosition(loc.latitude, loc.longitude, -8)
-        val elevAzimuth = sunPosition.calculateSunPosition(year, month+1, day, 12, 15)
-        val sunrise = sunPosition.getSunrise(year, month+1, day, 12, 15)
-        val sunset = sunPosition.getSunset(year, month+1, day, 12, 15)
+
+    fun updateLatLong(loc: Location, year: Int, month: Int, day: Int,) {
+        this.loc = loc
+        this.year = year
+        this.month = month
+        this.day = day
+
+        this.sunPosition = SunPosition(loc.latitude, loc.longitude, -8)
+        this.elevAzimuth = sunPosition.calculateSunPosition(year, month+1, day, 12, 15)
+        this.sunrise = sunPosition.getSunrise(year, month+1, day, 12, 15)
+        this.sunset = sunPosition.getSunset(year, month+1, day, 12, 15)
 
         var string = ""
 
@@ -38,6 +52,11 @@ class SecondActivityViewModel: ViewModel() {
         }
 //        string = "year " + year + "month " + month + "day " + day
         _latLong.value = string
+    }
+
+    fun updateTime(hour: Int): DoubleArray {
+        return sunPosition.calculateSunPosition(year, month, day, hour, 0)
+
     }
 
     fun listenLatLong(): LiveData<String> {

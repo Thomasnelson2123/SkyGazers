@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.camera.core.CameraSelector
@@ -44,7 +45,8 @@ class SecondActivity : AppCompatActivity() {
 //        val month = intent?.extras?.getString("month").toString().toInt()
 //        val day = intent?.extras?.getString("day").toString().toInt()
 
-        // get permissions
+
+        //get latitude and longitude
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION

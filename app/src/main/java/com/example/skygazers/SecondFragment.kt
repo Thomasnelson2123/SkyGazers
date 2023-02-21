@@ -28,6 +28,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
+import android.widget.SeekBar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -178,16 +179,16 @@ class SecondFragment : Fragment() {
 ////        }
 //    }
 
-    private fun updatePosLoop() {
-        while(isRunning) {
-            //TODO: get sun position based off of location/gyroscope parameters to set X,Y coordinates
-            Thread.sleep(100)
-            val randX = (0..1000).random()
-            val randY = (0..1000).random()
-            binding.sunView.setX(randX.toFloat())
-            binding.sunView.setY(randY.toFloat())
-        }
-    }
+//    private fun updatePosLoop() {
+//        while(isRunning) {
+//            //TODO: get sun position based off of location/gyroscope parameters to set X,Y coordinates
+//            Thread.sleep(100)
+//            val randX = (0..1000).random()
+//            val randY = (0..1000).random()
+//            binding.sunView.setX(randX.toFloat())
+//            binding.sunView.setY(randY.toFloat())
+//        }
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -195,6 +196,28 @@ class SecondFragment : Fragment() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
+
+        val seek = binding.seekBar;
+        seek?.setOnSeekBarChangeListener(object:
+        SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val curTime =seekBar?.progress.toString()
+                binding.curNum.text = curTime
+                val pos = viewModel.updateTime(curTime.toInt())
+                binding.curAzimuth.text= pos.get(1).toString()
+                binding.curElevation.text= pos.get(0).toString()
+
+
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
 
         viewModel.listenLatLong().observe(viewLifecycleOwner) {
             binding.textviewSecond.text = it
@@ -253,3 +276,5 @@ class SecondFragment : Fragment() {
         }
     }
 }
+
+
