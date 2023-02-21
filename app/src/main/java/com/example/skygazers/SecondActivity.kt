@@ -41,9 +41,9 @@ class SecondActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-//        val year = intent?.extras?.getString("year").toString().toInt()
-//        val month = intent?.extras?.getString("month").toString().toInt()
-//        val day = intent?.extras?.getString("day").toString().toInt()
+        val year = intent?.extras?.getString("year").toString().toInt()
+        val month = intent?.extras?.getString("month").toString().toInt()
+        val day = intent?.extras?.getString("day").toString().toInt()
 
 
         //get latitude and longitude
@@ -64,16 +64,16 @@ class SecondActivity : AppCompatActivity() {
             )
             return
         } else {
-//            fusedLocationClient.requestLocationUpdates(
-//                LocationRequest.create(), object :
-//                    LocationCallback() {
-//                    override fun onLocationResult(p0: LocationResult) {
-//                        val location = p0.lastLocation
-//                        viewModel.updateLatLong(location, year, month, day)
-//                    }
-//                },
-//                Looper.getMainLooper()
-//            )
+            fusedLocationClient.requestLocationUpdates(
+                LocationRequest.create(), object :
+                    LocationCallback() {
+                    override fun onLocationResult(p0: LocationResult) {
+                        val location = p0.lastLocation
+                        viewModel.updateLatLong(location, year, month, day)
+                    }
+                },
+                Looper.getMainLooper()
+            )
         }
 
     }
@@ -88,33 +88,33 @@ class SecondActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-//        val year = intent?.extras?.getString("year").toString().toInt()
-//        val month = intent?.extras?.getString("month").toString().toInt()
-//        val day = intent?.extras?.getString("day").toString().toInt()
+        val year = intent?.extras?.getString("year").toString().toInt()
+        val month = intent?.extras?.getString("month").toString().toInt()
+        val day = intent?.extras?.getString("day").toString().toInt()
 
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.CAMERA
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
 
-//            fusedLocationClient.requestLocationUpdates(
-//                LocationRequest.create(), object :
-//                    LocationCallback() {
-//                    override fun onLocationResult(p0: LocationResult) {
-//                        val location = p0.lastLocation
-//                        viewModel.updateLatLong(location, year, month, day)
-//                    }
-//                },
-//                Looper.getMainLooper()
-//            )
-//        }
+            fusedLocationClient.requestLocationUpdates(
+                LocationRequest.create(), object :
+                    LocationCallback() {
+                    override fun onLocationResult(p0: LocationResult) {
+                        val location = p0.lastLocation
+                        viewModel.updateLatLong(location, year, month, day)
+                    }
+                },
+                Looper.getMainLooper()
+            )
+        }
 
     }
 

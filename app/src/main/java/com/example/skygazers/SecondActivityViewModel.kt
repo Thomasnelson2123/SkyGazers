@@ -51,7 +51,7 @@ class SecondActivityViewModel: ViewModel() {
                     "Sunrise: " + sunrise[0] + ":" + sunrise[1] + "\nSunset: " + sunset[0] + ":" + sunset[1]
         }
 //        string = "year " + year + "month " + month + "day " + day
-        _latLong.value = string
+        _latLong.value = ""
     }
 
     fun updateTime(hour: Int): DoubleArray {
