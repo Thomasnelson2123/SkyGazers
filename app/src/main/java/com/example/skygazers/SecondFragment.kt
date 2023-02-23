@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.Manifest
 import android.content.pm.PackageManager
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -39,6 +40,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCharacteristics
+import kotlin.math.abs
+import kotlin.properties.Delegates
 
 
 private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
@@ -63,7 +68,10 @@ class SecondFragment : Fragment() {
     private var cameraProvider: ProcessCameraProvider? = null
     private lateinit var windowManager: WindowManager
 
-
+    var cameraManager: CameraManager? = null
+    private var horizViewAngle by Delegates.notNull<Float>()
+    private var vertViewAngle by Delegates.notNull<Float>()
+    private var sunPos by Delegates.notNull<DoubleArray>()
 
 
     private lateinit var cameraExecutor: ExecutorService
@@ -79,6 +87,7 @@ class SecondFragment : Fragment() {
             // Request camera-related permissions
             requestPermissions(PERMISSIONS_REQUIRED, 10)
         }
+        cameraManager = context?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
     }
 
@@ -93,6 +102,27 @@ class SecondFragment : Fragment() {
             // Build and bind the camera use cases
             bindCameraUseCases()
         }, ContextCompat.getMainExecutor(requireContext()))
+        try {
+            val cameraId = cameraManager!!.cameraIdList[0]
+            val characteristics = cameraManager!!.getCameraCharacteristics(cameraId)
+
+            val horizontalViewAngles = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
+            val verticalViewAngles = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE)
+//
+//            // Calculate the horizontal and vertical focal lengths THIS IS WHERE IT BREAKS
+            val horizontalFocalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)!![0]
+            val verticalFocalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)!![1]
+//
+//            // Calculate the horizontal and vertical field of view in radians
+//            val horizontalFieldOfView = 2 * Math.atan(horizontalViewAngles!!.width().toDouble() / (2 * horizontalFocalLength))
+//            val verticalFieldOfView = 2 * Math.atan(verticalViewAngles!!.height.toDouble() / (2 * verticalFocalLength))
+//
+//            // Convert the field of view to degrees
+//             horizViewAngle = Math.toDegrees(horizontalFieldOfView).toFloat()
+//             vertViewAngle = Math.toDegrees(verticalFieldOfView).toFloat()
+        } catch (e: CameraAccessException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onCreateView(
@@ -153,6 +183,7 @@ class SecondFragment : Fragment() {
                     //binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
                     //var magValues = sensor.getMagneticFieldValues()
                     //binding.magneticFieldValuesTextView.text = "x: " + magValues[0] + " y: " + magValues[1] + " z: " + magValues[2]
+                    //displaySun(orientation[0], orientation[1], sunPos[1].toFloat(), sunPos[0].toFloat())
                 }
             }
         }, 0, 1000)
@@ -203,9 +234,9 @@ class SecondFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
-                val pos = viewModel.updateTime(curTime.toInt())
-                binding.curAzimuth.text= pos.get(1).toString()
-                binding.curElevation.text= pos.get(0).toString()
+                sunPos = viewModel.updateTime(curTime.toInt())
+                binding.curAzimuth.text= sunPos.get(1).toString()
+                binding.curElevation.text= sunPos.get(0).toString()
 
 
 
@@ -264,6 +295,20 @@ class SecondFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         sensor.stopSensors()
+    }
+
+    // 1: phone, 2: sun
+    fun displaySun(az1: Float, el1: Float, az2: Float, el2: Float) {
+
+        if (abs(az1 - az2) < horizViewAngle / 2 && abs(el1 - el2) < vertViewAngle) {
+            var az = (az2 - az1) + (horizViewAngle / 2)
+            var el = -1 * (el2 - el1) + (vertViewAngle / 2)
+            var x = az / horizViewAngle
+            var y = el / vertViewAngle
+            binding.sunView.setX(x)
+            binding.sunView.setY(y)
+        }
+
     }
 
 
