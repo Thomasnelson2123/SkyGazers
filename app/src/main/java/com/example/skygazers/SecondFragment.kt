@@ -36,6 +36,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
 import java.util.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -54,6 +56,8 @@ class SecondFragment : Fragment() {
     private lateinit var sensor: Sensors
     private lateinit var accelerometerValuesTextView: TextView
     private lateinit var magneticFieldValuesTextView: TextView
+
+
 
     var isRunning: Boolean = false
 
@@ -143,19 +147,12 @@ class SecondFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         sensor.startSensors()
-        timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                Handler(Looper.getMainLooper()).post {
-                    var orientation = sensor.getOrientationValues()
-                    binding.orientationTextView.text = "az: " + orientation[0] + " pitch: " + orientation[1] + " roll: " + orientation[2]
-                    //var accValues = sensor.getAccelerometerValues()
-                    //binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
-                    //var magValues = sensor.getMagneticFieldValues()
-                    //binding.magneticFieldValuesTextView.text = "x: " + magValues[0] + " y: " + magValues[1] + " z: " + magValues[2]
-                }
+        lifecycleScope.launch {
+            sensor.subscribeOrientation().collect {
+                binding.orientationTextView.text =
+                    "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
             }
-        }, 0, 1000)
+        }
     }
 //    private fun setUpPosLoop() {
 //        setUpButton()
