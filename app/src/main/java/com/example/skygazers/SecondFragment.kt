@@ -27,6 +27,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
 import java.util.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -139,21 +142,13 @@ class SecondFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         sensor.startSensors()
-        timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                Handler(Looper.getMainLooper()).post {
-                    var orientation = sensor.getOrientationValues()
-                    binding.orientationTextView.text = "az: " + orientation[0] + " pitch: " + orientation[1] + " roll: " + orientation[2]
-                    displaySun()
-                    //var accValues = sensor.getAccelerometerValues()
-                    //binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
-                    //var magValues = sensor.getMagneticFieldValues()
-                    //binding.magneticFieldValuesTextView.text = "x: " + magValues[0] + " y: " + magValues[1] + " z: " + magValues[2]
-                    //displaySun(orientation[0], orientation[1], sunPos[1].toFloat(), sunPos[0].toFloat())
-                }
+        lifecycleScope.launch {
+            sensor.subscribeOrientation().collect {
+                binding.orientationTextView.text =
+                    "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
             }
-        }, 0, 1000)
+            displaySun()
+        }
     }
 //    private fun setUpPosLoop() {
 //        setUpButton()
@@ -194,6 +189,7 @@ class SecondFragment : Fragment() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
+
         val seek = binding.seekBar;
         seek?.setOnSeekBarChangeListener(object:
         SeekBar.OnSeekBarChangeListener {
