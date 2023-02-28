@@ -7,6 +7,7 @@ import android.hardware.SensorManager.*
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.lang.Math.abs
 import kotlin.math.acos
 
 
@@ -22,7 +23,6 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     private var TAG = "Debugging"
     private val mRotHist: MutableList<FloatArray> = mutableListOf()
     private var mRotHistIndex = 0
-    var values = FloatArray(3)
     var R = FloatArray(9)
     var I = FloatArray(9)
     var outR = FloatArray(9)
@@ -70,6 +70,7 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     }
 
     fun getOrientationValues() : FloatArray {
+        var values = FloatArray(3)
         getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
 
         // inclination is the degree of tilt by the device independent of orientation (portrait or landscape)
@@ -90,16 +91,18 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
         remapCoordinateSystem(R, AXIS_X, AXIS_Z, outR)
         getOrientation(outR, values)
         if(mFacing.isNaN()) {
-            values[0] = ((Math.toDegrees(values[0].toDouble())  + 360) % 360).toFloat()
+            values[0] = ((Math.toDegrees(values[0].toDouble())+ 360) % 360).toFloat()
         }
         else {
-            values[0] = ((Math.toDegrees(mFacing.toDouble())  + 360) % 360).toFloat()
+            values[0] = ((Math.toDegrees(mFacing.toDouble())+ 360) % 360).toFloat()
         }
+//        values[0] = ((Math.toDegrees(mFacing.toDouble())  + 360) % 360).toFloat()
         values[1] = Math.toDegrees(values[1].toDouble()).toFloat()
         values[2] = Math.toDegrees(values[2].toDouble()).toFloat()
 
 
-//        val convert = {value: Float, degree: Int -> if (value < 0) {abs(value) + degree} else value}
+//        val convert = {value: Float, degree: Int -> if (value < 0) {
+//            kotlin.math.abs(value) + degree} else value}
 //        values[0] = convert(values[0], 180)
         return values
     }
