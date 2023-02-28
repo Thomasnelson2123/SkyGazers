@@ -34,6 +34,13 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
         return magneticFieldValues
     }
 
+    fun getRotationMatrixValues(): FloatArray {
+        var R = FloatArray(16)
+        var I = FloatArray(16)
+        getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
+        return R
+    }
+
     override fun onSensorChanged(event: SensorEvent) {
         when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER -> accelerometerValues = event.values.clone()
@@ -46,9 +53,9 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
 
     fun getOrientationValues() : FloatArray {
         var values = FloatArray(3)
-        var R = FloatArray(9)
-        var I = FloatArray(9)
-        var outR = FloatArray(9)
+        var R = FloatArray(16)
+        var I = FloatArray(16)
+        var outR = FloatArray(16)
         getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
 
         remapCoordinateSystem(R, AXIS_X, AXIS_Z, outR)

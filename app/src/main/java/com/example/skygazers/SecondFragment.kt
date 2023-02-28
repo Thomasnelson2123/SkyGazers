@@ -2,13 +2,10 @@ package com.example.skygazers
 
 import android.content.Context
 import android.content.Context.SENSOR_SERVICE
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.Manifest
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraManager
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,31 +15,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import android.view.WindowManager
-import android.widget.LinearLayout
-import android.widget.ImageView
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import android.widget.SeekBar
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
 import java.util.*
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.hardware.camera2.CameraAccessException
-import android.hardware.camera2.CameraCharacteristics
-import kotlin.math.abs
+import android.opengl.Matrix
+import android.widget.LinearLayout
+import android.widget.Toast
+import java.io.Console
 import kotlin.properties.Delegates
 
 
@@ -68,9 +59,6 @@ class SecondFragment : Fragment() {
     private var cameraProvider: ProcessCameraProvider? = null
     private lateinit var windowManager: WindowManager
 
-    var cameraManager: CameraManager? = null
-    private var horizViewAngle by Delegates.notNull<Float>()
-    private var vertViewAngle by Delegates.notNull<Float>()
     private var sunPos by Delegates.notNull<DoubleArray>()
 
 
@@ -87,7 +75,6 @@ class SecondFragment : Fragment() {
             // Request camera-related permissions
             requestPermissions(PERMISSIONS_REQUIRED, 10)
         }
-        cameraManager = context?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
     }
 
@@ -102,27 +89,6 @@ class SecondFragment : Fragment() {
             // Build and bind the camera use cases
             bindCameraUseCases()
         }, ContextCompat.getMainExecutor(requireContext()))
-        try {
-            val cameraId = cameraManager!!.cameraIdList[0]
-            val characteristics = cameraManager!!.getCameraCharacteristics(cameraId)
-
-            val horizontalViewAngles = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)
-            val verticalViewAngles = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE)
-//
-//            // Calculate the horizontal and vertical focal lengths THIS IS WHERE IT BREAKS
-            val horizontalFocalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)!![0]
-            val verticalFocalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)!![1]
-//
-//            // Calculate the horizontal and vertical field of view in radians
-//            val horizontalFieldOfView = 2 * Math.atan(horizontalViewAngles!!.width().toDouble() / (2 * horizontalFocalLength))
-//            val verticalFieldOfView = 2 * Math.atan(verticalViewAngles!!.height.toDouble() / (2 * verticalFocalLength))
-//
-//            // Convert the field of view to degrees
-//             horizViewAngle = Math.toDegrees(horizontalFieldOfView).toFloat()
-//             vertViewAngle = Math.toDegrees(verticalFieldOfView).toFloat()
-        } catch (e: CameraAccessException) {
-            e.printStackTrace()
-        }
     }
 
     override fun onCreateView(
@@ -179,6 +145,7 @@ class SecondFragment : Fragment() {
                 Handler(Looper.getMainLooper()).post {
                     var orientation = sensor.getOrientationValues()
                     binding.orientationTextView.text = "az: " + orientation[0] + " pitch: " + orientation[1] + " roll: " + orientation[2]
+                    displaySun()
                     //var accValues = sensor.getAccelerometerValues()
                     //binding.accelerometerValuesTextView.text = "x: " + accValues[0] + " y: " + accValues[1] + " z: " + accValues[2]
                     //var magValues = sensor.getMagneticFieldValues()
@@ -227,7 +194,6 @@ class SecondFragment : Fragment() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
-
         val seek = binding.seekBar;
         seek?.setOnSeekBarChangeListener(object:
         SeekBar.OnSeekBarChangeListener {
@@ -237,6 +203,7 @@ class SecondFragment : Fragment() {
                 sunPos = viewModel.updateTime(curTime.toInt())
                 binding.curAzimuth.text= sunPos.get(1).toString()
                 binding.curElevation.text= sunPos.get(0).toString()
+
 
 
 
@@ -252,7 +219,7 @@ class SecondFragment : Fragment() {
 
         viewModel.listenLatLong().observe(viewLifecycleOwner) {
             binding.textviewSecond.text = it
-
+            sunPos = viewModel.updateTime(0)
         }
 
 //        setUpPosLoop()
@@ -297,18 +264,62 @@ class SecondFragment : Fragment() {
         sensor.stopSensors()
     }
 
-    // 1: phone, 2: sun
-    fun displaySun(az1: Float, el1: Float, az2: Float, el2: Float) {
-
-        if (abs(az1 - az2) < horizViewAngle / 2 && abs(el1 - el2) < vertViewAngle) {
-            var az = (az2 - az1) + (horizViewAngle / 2)
-            var el = -1 * (el2 - el1) + (vertViewAngle / 2)
-            var x = az / horizViewAngle
-            var y = el / vertViewAngle
-            binding.sunView.setX(x)
-            binding.sunView.setY(y)
+    fun displaySun() {
+        var azimuth = 0.0
+        var elevation = 0.0
+        try {
+            azimuth = sunPos[1]
+            elevation = sunPos[0]
         }
+        catch(e: Exception) {
 
+        }
+        val R = sensor.getRotationMatrixValues()
+        val coords = getScreenCoords(R, azimuth, elevation)
+        Log.d("MyTag", "" + coords.first + ", " + coords.second)
+
+        binding.sunPicture.setX(coords.first)
+        binding.sunPicture.setY(coords.second)
+
+
+
+    }
+
+    fun getScreenCoords(R: FloatArray, azimuth: Double, elevation: Double): Pair<Float, Float> {
+        // Convert the azimuth and elevation to radians
+        val azimuthRadians = Math.toRadians(azimuth.toDouble())
+        val elevationRadians = Math.toRadians(elevation.toDouble())
+
+        // Calculate the vector pointing to the sun in 3D space
+        val x = Math.cos(azimuthRadians) * Math.cos(elevationRadians)
+        val y = Math.sin(azimuthRadians) * Math.cos(elevationRadians)
+        val z = Math.sin(elevationRadians)
+
+        // Create a float array containing the vector coordinates
+        val vector = floatArrayOf(x.toFloat(), y.toFloat(), z.toFloat(), 1.0f)
+
+        // Create a new float array to hold the transformed coordinates
+        val transformedVector = FloatArray(4)
+
+        // Multiply the rotation matrix by the vector to transform it to the device coordinate system
+        Matrix.multiplyMV(transformedVector, 0, R, 0, vector, 0)
+
+        // Normalize the transformed vector by dividing by its W coordinate
+        transformedVector[0] /= transformedVector[3]
+        transformedVector[1] /= transformedVector[3]
+        transformedVector[2] /= transformedVector[3]
+
+        // Get the screen dimensions
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        // Convert the normalized vector coordinates to screen coordinates
+        val xScreen = ((transformedVector[0] + 1.0f) / 2.0f * screenWidth)
+        val yScreen = ((1.0f - transformedVector[1]) / 2.0f * screenHeight)
+
+        // Return the screen coordinates as a Pair
+        return Pair(xScreen, yScreen)
     }
 
 
