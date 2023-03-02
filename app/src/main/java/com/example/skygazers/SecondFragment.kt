@@ -146,8 +146,8 @@ class SecondFragment : Fragment() {
             sensor.subscribeOrientation().collect {
                 binding.orientationTextView.text =
                     "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
+                displaySun()
             }
-            displaySun()
         }
     }
 //    private fun setUpPosLoop() {
