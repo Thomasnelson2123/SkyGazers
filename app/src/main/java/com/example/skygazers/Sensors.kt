@@ -4,10 +4,8 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.hardware.SensorManager.*
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.lang.Math.abs
 import kotlin.math.acos
 
 
@@ -23,11 +21,11 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     private var TAG = "Debugging"
     private val mRotHist: MutableList<FloatArray> = mutableListOf()
     private var mRotHistIndex = 0
-    var R = FloatArray(9)
-    var I = FloatArray(9)
-    var outR = FloatArray(9)
+    var R = FloatArray(16)
+    var I = FloatArray(16)
+    var outR = FloatArray(16)
     private val mHistoryMaxLength = 40
-    private val oreintationData = MutableStateFlow(FloatArray(3))
+    private val orientationData = MutableStateFlow(FloatArray(3))
 
     init {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -52,9 +50,7 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     }
 
     fun getRotationMatrixValues(): FloatArray {
-        var R = FloatArray(16)
-        var I = FloatArray(16)
-        getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
+        getOrientationValues()
         return R
     }
 
@@ -64,12 +60,12 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
             Sensor.TYPE_MAGNETIC_FIELD -> magneticFieldValues = event.values.clone()
         }
         val current = getOrientationValues()
-        oreintationData.value = current
+        orientationData.value = current
 
     }
 
     fun subscribeOrientation(): Flow<FloatArray> {
-        return oreintationData
+        return orientationData
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
@@ -78,9 +74,6 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
 
     fun getOrientationValues() : FloatArray {
         var values = FloatArray(3)
-        var R = FloatArray(16)
-        var I = FloatArray(16)
-        var outR = FloatArray(16)
         getRotationMatrix(R, I, accelerometerValues, magneticFieldValues)
 
         // inclination is the degree of tilt by the device independent of orientation (portrait or landscape)
@@ -118,17 +111,11 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     }
 
     private fun clearRotHist() {
-        if (DEBUG) {
-            Log.d(TAG, "clearRotHist()")
-        }
         mRotHist.clear()
         mRotHistIndex = 0
     }
 
     private fun setRotHist() {
-        if (DEBUG) {
-            Log.d(TAG, "setRotHist()")
-        }
         val hist: FloatArray = R.clone()
         if (mRotHist.size == mHistoryMaxLength) {
             mRotHist.removeAt(mRotHistIndex)
@@ -138,9 +125,6 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     }
 
     private fun findFacing(): Float {
-        if (DEBUG) {
-            Log.d(TAG, "findFacing()")
-        }
         val averageRotHist: FloatArray? = average(mRotHist)
         return Math.atan2(-averageRotHist?.get(2)?.toDouble()!!, -averageRotHist?.get(5)!!.toDouble()).toFloat()
     }
