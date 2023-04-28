@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.SensorManager
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
@@ -194,9 +195,21 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-n            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        binding.buttonSecond.setOnClickListener{
+            val intent = Intent(context, MainActivity::class.java);
+            startActivity(intent)
         }
+        /*val back = findViewById<Button>(R.id.button_second);
+        back.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java);
+            startActivity(intent);
+        }*/
+
+        /*
+        binding.buttonSecond.setOnClickListener {
+        n
+    }
+         */
 
         val seek = binding.seekBar;
         seek?.setOnSeekBarChangeListener(object:
@@ -207,6 +220,7 @@ n            findNavController().navigate(R.id.action_SecondFragment_to_FirstFra
                 sunPos = viewModel.updateTime(curTime.toInt())
                 binding.curAzimuth.text= sunPos.get(1).toString()
                 binding.curElevation.text= sunPos.get(0).toString()
+
 
 
 
