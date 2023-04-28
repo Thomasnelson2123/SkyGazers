@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+
     tools:context=".debug">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/Elevation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="50000"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <TextView
+            android:id="@+id/Azimuth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3.14159265"
+
+            app:layout_constraintTop_toBottomOf="@+id/Elevation" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

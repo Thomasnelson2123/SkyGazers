@@ -79,6 +79,7 @@ class SecondFragment : Fragment() {
             requestPermissions(PERMISSIONS_REQUIRED, 10)
         }
 
+
     }
 
     private fun setUpCamera() {
@@ -100,6 +101,13 @@ class SecondFragment : Fragment() {
     ): View? {
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        binding.showDebug.setOnClickListener {
+            if(binding.debugWindow.visibility == View.VISIBLE){
+                binding.debugWindow.visibility = View.GONE;
+            } else {
+                binding.debugWindow.visibility = View.VISIBLE;
+            }
+        }
         return binding.root
     }
 
@@ -187,7 +195,7 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+n            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
         val seek = binding.seekBar;
@@ -199,6 +207,7 @@ class SecondFragment : Fragment() {
                 sunPos = viewModel.updateTime(curTime.toInt())
                 binding.curAzimuth.text= sunPos.get(1).toString()
                 binding.curElevation.text= sunPos.get(0).toString()
+
 
 
 
@@ -317,6 +326,8 @@ class SecondFragment : Fragment() {
         // Return the screen coordinates as a Pair
         return Pair(xScreen, yScreen)
     }
+
+
 
 
 
