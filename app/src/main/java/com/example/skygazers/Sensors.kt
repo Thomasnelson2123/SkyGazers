@@ -61,9 +61,17 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
         remapCoordinateSystem(R, AXIS_X, AXIS_Z, outR)
         getOrientation(outR, values)
         values[0] = values[0] * (360 / (2 * (Math.PI))).toFloat()
-        values[1] = values[1] * (360 / (2 * (Math.PI))).toFloat()
+        values[1] = -1 * values[1] * (360 / (2 * (Math.PI))).toFloat()
         values[2] = values[2] * (360 / (2 * (Math.PI))).toFloat()
 
+        val add360IfNegative: (Float) -> Float = { num ->
+            if (num < 0) {
+                num + 360
+            } else {
+                num
+            }
+        }
+        values[0] = add360IfNegative(values[0])
 
 //        val convert = {value: Float, degree: Int -> if (value < 0) {abs(value) + degree} else value}
 //        values[0] = convert(values[0], 180)

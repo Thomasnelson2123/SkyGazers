@@ -1,31 +1,19 @@
 package com.example.skygazers
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.SeekBar
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.skygazers.databinding.ActivitySecondBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.*
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+
 
 class SecondActivity : AppCompatActivity() {
 
