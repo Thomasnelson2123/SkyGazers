@@ -212,6 +212,7 @@ class SecondFragment : Fragment() {
          */
 
         val seek = binding.seekBar;
+        val sunImg = binding.sunPicture;
         seek?.setOnSeekBarChangeListener(object:
         SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -220,6 +221,14 @@ class SecondFragment : Fragment() {
                 sunPos = viewModel.updateTime(curTime.toInt())
                 binding.curAzimuth.text= sunPos.get(1).toString()
                 binding.curElevation.text= sunPos.get(0).toString()
+                val el = sunPos.get(0);
+                if (el < 10 && el > 0){
+                    //sunset / sunrise
+                    sunImg.setImageResource(R.drawable.sunset);
+                } else {
+                    //day
+                    sunImg.setImageResource(R.drawable.sun);
+                }
 
 
 
