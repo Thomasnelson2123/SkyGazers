@@ -159,6 +159,12 @@ class SecondFragment : Fragment() {
                 }
             }
         }, 0, 1000)
+        lifecycleScope.launch {
+            sensor.subscribeOrientation().collect {
+                binding.orientationTextView.text =
+                    "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
+            }
+        }
     }
 
 
