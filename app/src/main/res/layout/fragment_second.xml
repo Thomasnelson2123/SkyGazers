@@ -17,6 +17,7 @@
 
         <ImageView
             android:id="@+id/sunPicture"
+            android:contentDescription="picture of sun"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="-50dp"
@@ -39,15 +40,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/previous"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageButton
+        android:id="@+id/showDebug"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="@color/grey_brown"
+        app:tint="@color/dark_blue"
+        android:contentDescription="bug"
+        android:padding="4dp"
+        android:src="@drawable/iconmonstr_bug_1"
+        android:text="debug"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_second"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/grey_brown"
+        app:tint="@color/dark_blue"
+        android:contentDescription="calendar"
+        android:src="@drawable/iconmonstr_calendar_4"
+        android:text="@string/previous"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/orientation_text_view"
@@ -59,61 +79,103 @@
         app:layout_constraintTop_toBottomOf="@+id/textview_second" />
 
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="290dp"
-        android:layout_height="18dp"
-        android:max="24"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="97dp"
+        android:background="#CB000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_second" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/low"
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="290dp"
+            android:layout_height="18dp"
+            android:max="24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/curNum"
+            app:layout_constraintEnd_toEndOf="@+id/seekBar" />
+
+        <TextView
+            android:id="@+id/curNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintEnd_toStartOf="@+id/high"
+            app:layout_constraintStart_toEndOf="@+id/low"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/curNum"
+            app:layout_constraintStart_toStartOf="@+id/seekBar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/debugWindow"
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="00"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintStart_toStartOf="@+id/seekBar" />
-
-    <TextView
-        android:id="@+id/high"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="24"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintEnd_toEndOf="@+id/seekBar" />
-
-    <TextView
-        android:id="@+id/curNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        android:layout_marginBottom="50dp"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_second" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/curAzimuth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="textfor"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintEnd_toStartOf="@+id/textview_second"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_second" />
+        <TextView
+            android:id="@+id/curAzimuth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:text="textfor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/curElevation"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/curElevation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/curAzimuth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textview_second"
-        app:layout_constraintTop_toTopOf="@+id/curAzimuth" />
+        <TextView
+            android:id="@+id/curAzimuth2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Azimuth"
+            app:layout_constraintBottom_toTopOf="@+id/curAzimuth"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/curElevation2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Elevation"
+            app:layout_constraintBottom_toTopOf="@+id/curElevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/curElevation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

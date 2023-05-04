@@ -55,7 +55,7 @@ class SecondActivityViewModel: ViewModel() {
     }
 
     fun updateTime(hour: Int): DoubleArray {
-        return sunPosition.calculateSunPosition(year, month, day, hour, 0)
+        return sunPosition.calculateSunPosition(year, month, day, hour-1, 0)
 
     }
 

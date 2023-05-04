@@ -97,7 +97,7 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
             values[0] = ((Math.toDegrees(mFacing.toDouble())+ 360) % 360).toFloat()
         }
 //        values[0] = ((Math.toDegrees(mFacing.toDouble())  + 360) % 360).toFloat()
-        values[1] = Math.toDegrees(values[1].toDouble()).toFloat()
+        values[1] = -1 * Math.toDegrees(values[1].toDouble()).toFloat()
         values[2] = Math.toDegrees(values[2].toDouble()).toFloat()
 
 

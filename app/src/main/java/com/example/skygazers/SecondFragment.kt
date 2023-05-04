@@ -1,8 +1,10 @@
 package com.example.skygazers
 
-import android.Manifest
+
 import android.content.Context
 import android.content.Context.SENSOR_SERVICE
+import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.hardware.SensorManager
@@ -31,6 +33,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
+import java.util.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -51,6 +57,8 @@ class SecondFragment : Fragment() {
     private lateinit var sensor: Sensors
     private lateinit var accelerometerValuesTextView: TextView
     private lateinit var magneticFieldValuesTextView: TextView
+
+
 
     var isRunning: Boolean = false
 
@@ -103,6 +111,13 @@ class SecondFragment : Fragment() {
     ): View? {
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        binding.showDebug.setOnClickListener {
+            if(binding.debugWindow.visibility == View.VISIBLE){
+                binding.debugWindow.visibility = View.GONE;
+            } else {
+                binding.debugWindow.visibility = View.VISIBLE;
+            }
+        }
         return binding.root
     }
 
@@ -149,20 +164,11 @@ class SecondFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         sensor.startSensors()
-        timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                Handler(Looper.getMainLooper()).post {
-                    var orientation = sensor.getOrientationValues()
-                    binding.orientationTextView.text = "az: " + orientation[0] + " pitch: " + orientation[1] + " roll: " + orientation[2]
-                    displaySun(orientation[0], orientation[1])
-                }
-            }
-        }, 0, 1000)
         lifecycleScope.launch {
             sensor.subscribeOrientation().collect {
                 binding.orientationTextView.text =
                     "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
+                displaySun(it[0], it[1])
             }
         }
     }
@@ -170,10 +176,25 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+
+        binding.buttonSecond.setOnClickListener{
+            val intent = Intent(context, MainActivity::class.java);
+            startActivity(intent)
         }
-        val seek = binding.seekBar
+        /*val back = findViewById<Button>(R.id.button_second);
+        back.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java);
+            startActivity(intent);
+        }*/
+
+        /*
+        binding.buttonSecond.setOnClickListener {
+        n
+    }
+         */
+
+        val seek = binding.seekBar;
+        val sunImg = binding.sunPicture;
         seek?.setOnSeekBarChangeListener(object:
         SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -182,6 +203,20 @@ class SecondFragment : Fragment() {
                 sunPos = viewModel.updateTime(curTime.toInt())
                 binding.curAzimuth.text= sunPos.get(1).toString()
                 binding.curElevation.text= sunPos.get(0).toString()
+                val el = sunPos.get(0);
+                if (el < 10 && el > 0){
+                    //sunset / sunrise
+                    sunImg.setImageResource(R.drawable.sunset);
+                } else {
+                    //day
+                    sunImg.setImageResource(R.drawable.sun);
+                }
+
+
+
+
+
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -245,6 +280,9 @@ class SecondFragment : Fragment() {
 
         binding.sunPicture.setX(coords.first)
         binding.sunPicture.setY(coords.second)
+
+
+
     }
 
     fun getScreenCoords(azimuth: Float, elevation: Float): Pair<Float, Float> {
