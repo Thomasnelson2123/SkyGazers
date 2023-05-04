@@ -1,28 +1,39 @@
 package com.example.skygazers
 
 import android.Manifest
+import android.content.Context
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationRequest;
+import com.example.skygazers.databinding.ActivitySecondBinding
+import com.google.android.gms.location.*
+import java.util.concurrent.ExecutorService
+
 
 class SecondActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val viewModel: SecondActivityViewModel by viewModels()
+    private lateinit var cameraExecutor: ExecutorService
+    private lateinit var viewBinding: ActivitySecondBinding
+    private final val TAG = "StarGazersApp"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_second)
+        viewBinding = ActivitySecondBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val year = intent?.extras?.getString("year").toString().toInt()
@@ -39,10 +50,11 @@ class SecondActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.d("checking permissions", "requesting permissions")
             requestPermissions(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
                 ), 1
             )
             return
@@ -58,7 +70,11 @@ class SecondActivity : AppCompatActivity() {
                 Looper.getMainLooper()
             )
         }
+
     }
+
+
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -77,8 +93,12 @@ class SecondActivity : AppCompatActivity() {
             ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+
             fusedLocationClient.requestLocationUpdates(
                 LocationRequest.create(), object :
                     LocationCallback() {
@@ -91,5 +111,10 @@ class SecondActivity : AppCompatActivity() {
             )
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraExecutor.shutdown()
     }
 }
