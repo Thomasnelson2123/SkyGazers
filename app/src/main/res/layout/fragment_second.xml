@@ -144,19 +144,16 @@
             android:id="@+id/curAzimuth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
             android:text="textfor"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/curElevation"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginRight="10dp"
+            app:layout_constraintStart_toEndOf="@+id/curAzimuth2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/curAzimuth2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Azimuth"
-            app:layout_constraintBottom_toTopOf="@+id/curAzimuth"
+            android:text="Azimuth:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -164,10 +161,9 @@
             android:id="@+id/curElevation2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginStart="30dp"
             android:text="Elevation"
-            app:layout_constraintBottom_toTopOf="@+id/curElevation"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/curAzimuth"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -175,7 +171,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/curElevation2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curAzimuth" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

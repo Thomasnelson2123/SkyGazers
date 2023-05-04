@@ -166,7 +166,7 @@ class SecondFragment : Fragment() {
         sensor.startSensors()
         lifecycleScope.launch {
             sensor.subscribeOrientation().collect {
-                binding.orientationTextView.text =
+                binding.textView2.text =
                     "az: " + it[0] + " pitch: " + it[1] + " roll: " + it[2]
                 displaySun(it[0], it[1])
             }
