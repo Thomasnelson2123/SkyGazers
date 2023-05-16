@@ -1,12 +1,9 @@
 package com.example.skygazers
 
 import android.location.Location
-import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.util.Calendar
 
 class SecondActivityViewModel: ViewModel() {
 
@@ -15,7 +12,7 @@ class SecondActivityViewModel: ViewModel() {
     var year:Int = 0
     var month: Int = 0
     var day: Int = 0
-    lateinit var sunPosition: SunPosition
+    lateinit var sunPositionObject: SunPosition
     lateinit var elevAzimuth: DoubleArray
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
@@ -27,35 +24,17 @@ class SecondActivityViewModel: ViewModel() {
         this.month = month + 1
         this.day = day
 
-        this.sunPosition = SunPosition(loc.latitude, loc.longitude, -8)
-        this.elevAzimuth = sunPosition.calculateSunPosition(year, month, day, 12, 15)
-        this.sunrise = sunPosition.getSunrise(year, month, day, 12, 15)
-        this.sunset = sunPosition.getSunset(year, month, day, 12, 15)
+        this.sunPositionObject = SunPosition(loc.latitude, loc.longitude, -8)
+        this.elevAzimuth = sunPositionObject.calculateSunPosition(year, month, day, 12, 15)
+        this.sunrise = sunPositionObject.getSunrise(year, month, day, 12, 15)
+        this.sunset = sunPositionObject.getSunset(year, month, day, 12, 15)
 
-        var string = ""
-
-        if(sunrise[1] < 10 && sunset[1] < 10) {
-            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
-                    "Sunrise: " + sunrise[0] + ":0" + sunrise[1] + "\nSunset: " + sunset[0] + ":0" + sunset[1]
-        }
-        else if(sunrise[1] < 10) {
-            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
-                    "Sunrise: " + sunrise[0] + ":0" + sunrise[1] + "\nSunset: " + sunset[0] + ":" + sunset[1]
-        }
-        else if(sunset[1] < 10) {
-            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
-                    "Sunrise: " + sunrise[0] + ":" + sunrise[1] + "\nSunset: " + sunset[0] + ":0" + sunset[1]
-        }
-        else {
-            string = "Elevation: " + elevAzimuth[0] + "\nAzimuth " + elevAzimuth[1] + "\n" +
-                    "Sunrise: " + sunrise[0] + ":" + sunrise[1] + "\nSunset: " + sunset[0] + ":" + sunset[1]
-        }
 //        string = "year " + year + "month " + month + "day " + day
         _latLong.value = ""
     }
 
     fun updateTime(hour: Int): DoubleArray {
-        return sunPosition.calculateSunPosition(year, month, day, hour-1, 0)
+        return sunPositionObject.calculateSunPosition(year, month, day, hour-1, 0)
 
     }
 

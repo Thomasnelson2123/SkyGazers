@@ -29,6 +29,7 @@ class SecondActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var viewBinding: ActivitySecondBinding
     private final val TAG = "StarGazersApp"
+    public lateinit var Sun: SunObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +37,25 @@ class SecondActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+
+    }
+
+
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // get year, month, day from user in first activity
         val year = intent?.extras?.getString("year").toString().toInt()
         val month = intent?.extras?.getString("month").toString().toInt()
         val day = intent?.extras?.getString("day").toString().toInt()
+
+
 
 
         //get latitude and longitude
@@ -62,55 +79,16 @@ class SecondActivity : AppCompatActivity() {
             fusedLocationClient.requestLocationUpdates(
                 LocationRequest.create(), object :
                     LocationCallback() {
+                    // successfully got location permissions, update viewModel with location data
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        viewModel.updateLatLong(location, year, month, day)
+                        //viewModel.updateLatLong(location, year, month, day)
+                        Sun = SunObject(location, year, month, day, 0)
                     }
                 },
                 Looper.getMainLooper()
             )
         }
-
-    }
-
-
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        val year = intent?.extras?.getString("year").toString().toInt()
-        val month = intent?.extras?.getString("month").toString().toInt()
-        val day = intent?.extras?.getString("day").toString().toInt()
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-
-            fusedLocationClient.requestLocationUpdates(
-                LocationRequest.create(), object :
-                    LocationCallback() {
-                    override fun onLocationResult(p0: LocationResult) {
-                        val location = p0.lastLocation
-                        viewModel.updateLatLong(location, year, month, day)
-                    }
-                },
-                Looper.getMainLooper()
-            )
-        }
-
     }
 
     override fun onDestroy() {
