@@ -84,6 +84,7 @@ class SecondActivity : AppCompatActivity() {
                         val location = p0.lastLocation
                         //viewModel.updateLatLong(location, year, month, day)
                         Sun = SunObject(location, year, month, day, 0)
+                        // will need to give it an image later
                     }
                 },
                 Looper.getMainLooper()
