@@ -16,6 +16,7 @@ class SecondActivityViewModel: ViewModel() {
     lateinit var elevAzimuth: DoubleArray
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
+    lateinit var sun: SunObject
 
 
     fun updateLatLong(loc: Location, year: Int, month: Int, day: Int,) {
@@ -40,6 +41,13 @@ class SecondActivityViewModel: ViewModel() {
 
     fun listenLatLong(): LiveData<String> {
         return _latLong
+    }
+
+    fun setSunObject(sun: SunObject) {
+        this.sun = sun
+    }
+    fun getSunObject(): SunObject {
+        return this.sun
     }
 
     /*fun createImgOverlay(x: Int, y: Int) {

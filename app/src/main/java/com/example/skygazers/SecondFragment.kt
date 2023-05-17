@@ -57,6 +57,7 @@ class SecondFragment : Fragment() {
     private lateinit var sensor: Sensors
     private lateinit var accelerometerValuesTextView: TextView
     private lateinit var magneticFieldValuesTextView: TextView
+    private lateinit var sun: SunObject
 
 
 
@@ -83,7 +84,6 @@ class SecondFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sunPos = DoubleArray(2) {0.0}
 
         if (!hasPermissions(requireContext())) {
             // Request camera-related permissions
@@ -109,7 +109,6 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         binding.showDebug.setOnClickListener {
             if(binding.debugWindow.visibility == View.VISIBLE){
@@ -118,6 +117,7 @@ class SecondFragment : Fragment() {
                 binding.debugWindow.visibility = View.VISIBLE;
             }
         }
+        sun = viewModel.getSunObject()
         return binding.root
     }
 
@@ -163,6 +163,7 @@ class SecondFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        //sun = viewModel.getSunObject()
         sensor.startSensors()
         lifecycleScope.launch {
             sensor.subscribeOrientation().collect {
@@ -181,17 +182,6 @@ class SecondFragment : Fragment() {
             val intent = Intent(context, MainActivity::class.java);
             startActivity(intent)
         }
-        /*val back = findViewById<Button>(R.id.button_second);
-        back.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java);
-            startActivity(intent);
-        }*/
-
-        /*
-        binding.buttonSecond.setOnClickListener {
-        n
-    }
-         */
 
         val seek = binding.seekBar;
         val sunImg = binding.sunPicture;
@@ -200,10 +190,9 @@ class SecondFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
-                sunPos = viewModel.updateTime(curTime.toInt())
-                binding.curAzimuth.text= sunPos.get(1).toString()
-                binding.curElevation.text= sunPos.get(0).toString()
-                val el = sunPos.get(0);
+                sun = viewModel.getSunObject()
+                sun.updateHour(progress)
+                val el = sun.elevation
                 if (el < 10 && el > 0){
                     //sunset / sunrise
                     sunImg.setImageResource(R.drawable.sunset);
@@ -291,8 +280,8 @@ class SecondFragment : Fragment() {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
 
-        val sunAz = sunPos[1].toFloat()
-        val sunEl = sunPos[0].toFloat()
+        val sunAz = sun.azimuth
+        val sunEl = sun.elevation
 
         Log.d("Screen ANgles", "horiz:" + horizonalAngle + "vert" + verticalAngle)
         var offset = 0f;

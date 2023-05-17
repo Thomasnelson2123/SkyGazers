@@ -85,6 +85,7 @@ class SecondActivity : AppCompatActivity() {
                         //viewModel.updateLatLong(location, year, month, day)
                         Sun = SunObject(location, year, month, day, 0)
                         // will need to give it an image later
+                        viewModel.setSunObject(Sun)
                     }
                 },
                 Looper.getMainLooper()

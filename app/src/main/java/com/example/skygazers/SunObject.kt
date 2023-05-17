@@ -9,9 +9,15 @@ class SunObject(var loc: Location, year: Int, var month: Int, var day: Int, var 
     var img: ImageView? = null
     var xpos = 0
     var ypos = 0
+    val sunPosCode = SunPosition(loc.latitude, loc.longitude, -8)
 
     init {
-        val sunPosCode = SunPosition(loc.latitude, loc.longitude, -8)
+        azimuth = 0f
+        elevation = 0f
+        calcPosition(sunPosCode)
+    }
+
+    fun calcPosition(sunPosCode: SunPosition) {
         val position = sunPosCode.calculateSunPosition(year, month, day, hour, 0)
         elevation = position[0].toFloat()
         azimuth = position[1].toFloat()
@@ -19,6 +25,7 @@ class SunObject(var loc: Location, year: Int, var month: Int, var day: Int, var 
 
     fun updateHour(hour: Int) {
         this.hour = hour
+        calcPosition(sunPosCode)
     }
 
     fun setImage(image: ImageView?) {
