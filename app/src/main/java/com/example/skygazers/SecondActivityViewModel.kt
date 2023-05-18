@@ -16,7 +16,7 @@ class SecondActivityViewModel: ViewModel() {
     lateinit var elevAzimuth: DoubleArray
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
-    lateinit var sun: SunObject
+    var sun: SunObject? = null
 
 
     fun updateLatLong(loc: Location, year: Int, month: Int, day: Int,) {
@@ -46,7 +46,7 @@ class SecondActivityViewModel: ViewModel() {
     fun setSunObject(sun: SunObject) {
         this.sun = sun
     }
-    fun getSunObject(): SunObject {
+    fun getSunObject(): SunObject? {
         return this.sun
     }
 

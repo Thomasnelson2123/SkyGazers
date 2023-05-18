@@ -19,7 +19,7 @@ class Sensors(private val sensorManager: SensorManager) : SensorEventListener {
     val TWENTY_FIVE_DEGREE_IN_RADIAN = 0.436332313f
     val ONE_FIFTY_FIVE_DEGREE_IN_RADIAN = 2.7052603f
     private var mFacing: Float = Float.NaN
-    private var DEBUG = true
+    private var DEBUG = false
     private var TAG = "Debugging"
     private val mRotHist: MutableList<FloatArray> = mutableListOf()
     private var mRotHistIndex = 0

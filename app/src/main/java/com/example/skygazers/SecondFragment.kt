@@ -57,7 +57,7 @@ class SecondFragment : Fragment() {
     private lateinit var sensor: Sensors
     private lateinit var accelerometerValuesTextView: TextView
     private lateinit var magneticFieldValuesTextView: TextView
-    private lateinit var sun: SunObject
+    var sun: SunObject? = null
 
 
 
@@ -117,7 +117,7 @@ class SecondFragment : Fragment() {
                 binding.debugWindow.visibility = View.VISIBLE;
             }
         }
-        sun = viewModel.getSunObject()
+//        sun = viewModel.getSunObject()
         return binding.root
     }
 
@@ -191,8 +191,11 @@ class SecondFragment : Fragment() {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
                 sun = viewModel.getSunObject()
-                sun.updateHour(progress)
-                val el = sun.elevation
+                sun?.updateHour(progress)
+//                sunPos = viewModel.updateTime(progress)
+//                binding.curAzimuth.text = sunPos[1].toString()
+//                binding.curElevation.text = sunPos[0].toString()
+                val el = sun?.elevation ?: 0f
                 if (el < 10 && el > 0){
                     //sunset / sunrise
                     sunImg.setImageResource(R.drawable.sunset);
@@ -218,6 +221,7 @@ class SecondFragment : Fragment() {
 
         viewModel.listenLatLong().observe(viewLifecycleOwner) {
             binding.textviewSecond.text = it
+            sun = viewModel.getSunObject()
             sunPos = viewModel.updateTime(0)
         }
 
@@ -280,10 +284,10 @@ class SecondFragment : Fragment() {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
 
-        val sunAz = sun.azimuth
-        val sunEl = sun.elevation
+        val sunAz = sun?.azimuth ?: 0f
+        val sunEl = sun?.elevation ?: 0f
 
-        Log.d("Screen ANgles", "horiz:" + horizonalAngle + "vert" + verticalAngle)
+//        Log.d("Screen ANgles", "horiz:" + horizonalAngle + "vert" + verticalAngle)
         var offset = 0f;
         // solves the issue of the sun "jumping" as you go from angle ~360 to ~0
         if (azimuth <= horizonalAngle / 2) {
