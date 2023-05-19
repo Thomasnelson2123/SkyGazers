@@ -29,14 +29,13 @@ class SecondActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var viewBinding: ActivitySecondBinding
     private final val TAG = "StarGazersApp"
-    public lateinit var Sun: SunObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
+        getLocation()
 
     }
 
@@ -49,14 +48,21 @@ class SecondActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        getLocation()
 
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraExecutor.shutdown()
+    }
+
+    fun getLocation() {
         // get year, month, day from user in first activity
         val year = intent?.extras?.getString("year").toString().toInt()
         val month = intent?.extras?.getString("month").toString().toInt()
         val day = intent?.extras?.getString("day").toString().toInt()
-
-
-
 
         //get latitude and longitude
         if (ActivityCompat.checkSelfPermission(
@@ -74,6 +80,7 @@ class SecondActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                 ), 1
             )
+
             return
         } else {
             fusedLocationClient.requestLocationUpdates(
@@ -82,19 +89,12 @@ class SecondActivity : AppCompatActivity() {
                     // successfully got location permissions, update viewModel with location data
                     override fun onLocationResult(p0: LocationResult) {
                         val location = p0.lastLocation
-                        //viewModel.updateLatLong(location, year, month, day)
-                        Sun = SunObject(location, year, month, day, 0)
+                        viewModel.updateLatLong(location, year, month, day)
                         // will need to give it an image later
-                        viewModel.setSunObject(Sun)
                     }
                 },
                 Looper.getMainLooper()
             )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraExecutor.shutdown()
     }
 }

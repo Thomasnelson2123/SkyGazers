@@ -72,10 +72,6 @@ class SecondFragment : Fragment() {
     private var horizonalAngle: Float = 0.0F
     private var verticalAngle: Float = 0.0F
 
-
-    private var sunPos by Delegates.notNull<DoubleArray>()
-
-
     private lateinit var cameraExecutor: ExecutorService
 
     // This property is only valid between onCreateView and
@@ -183,6 +179,7 @@ class SecondFragment : Fragment() {
             startActivity(intent)
         }
 
+
         val seek = binding.seekBar;
         val sunImg = binding.sunPicture;
         seek?.setOnSeekBarChangeListener(object:
@@ -190,8 +187,8 @@ class SecondFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
-                sun = viewModel.getSunObject()
-                sun?.updateHour(progress)
+                viewModel.updateTime(progress) // updates the sun's time
+                sun = viewModel.getSunObject().value
 //                sunPos = viewModel.updateTime(progress)
 //                binding.curAzimuth.text = sunPos[1].toString()
 //                binding.curElevation.text = sunPos[0].toString()
@@ -203,12 +200,6 @@ class SecondFragment : Fragment() {
                     //day
                     sunImg.setImageResource(R.drawable.sun);
                 }
-
-
-
-
-
-
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -219,10 +210,9 @@ class SecondFragment : Fragment() {
         })
 
 
-        viewModel.listenLatLong().observe(viewLifecycleOwner) {
-            binding.textviewSecond.text = it
-            sun = viewModel.getSunObject()
-            sunPos = viewModel.updateTime(0)
+        viewModel.getSunObject().observe(viewLifecycleOwner) {
+            sun = it
+            sun?.updateHour(0)
         }
 
 //        setUpPosLoop()
@@ -287,7 +277,7 @@ class SecondFragment : Fragment() {
         val sunAz = sun?.azimuth ?: 0f
         val sunEl = sun?.elevation ?: 0f
 
-//        Log.d("Screen ANgles", "horiz:" + horizonalAngle + "vert" + verticalAngle)
+        Log.d("Sun Angles", "azim:" + sunAz + "elev" + sunEl)
         var offset = 0f;
         // solves the issue of the sun "jumping" as you go from angle ~360 to ~0
         if (azimuth <= horizonalAngle / 2) {

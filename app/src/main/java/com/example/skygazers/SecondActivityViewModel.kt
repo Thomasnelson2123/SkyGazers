@@ -16,37 +16,23 @@ class SecondActivityViewModel: ViewModel() {
     lateinit var elevAzimuth: DoubleArray
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
-    var sun: SunObject? = null
+    val sun = MutableLiveData<SunObject>()
 
 
-    fun updateLatLong(loc: Location, year: Int, month: Int, day: Int,) {
+    fun updateLatLong(loc: Location, year: Int, month: Int, day: Int) {
         this.loc = loc
         this.year = year
         this.month = month + 1
         this.day = day
-
-        this.sunPositionObject = SunPosition(loc.latitude, loc.longitude, -8)
-        this.elevAzimuth = sunPositionObject.calculateSunPosition(year, month, day, 12, 15)
-        this.sunrise = sunPositionObject.getSunrise(year, month, day, 12, 15)
-        this.sunset = sunPositionObject.getSunset(year, month, day, 12, 15)
-
-//        string = "year " + year + "month " + month + "day " + day
-        _latLong.value = ""
-    }
-
-    fun updateTime(hour: Int): DoubleArray {
-        return sunPositionObject.calculateSunPosition(year, month, day, hour-1, 0)
+        sun.value = SunObject(loc, year, month, day, 0)
 
     }
 
-    fun listenLatLong(): LiveData<String> {
-        return _latLong
+    fun updateTime(hour: Int){
+        sun.value?.updateHour(hour)
     }
 
-    fun setSunObject(sun: SunObject) {
-        this.sun = sun
-    }
-    fun getSunObject(): SunObject? {
+    fun getSunObject(): LiveData<SunObject?> {
         return this.sun
     }
 
