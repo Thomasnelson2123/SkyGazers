@@ -24,7 +24,7 @@ class SecondActivityViewModel: ViewModel() {
         this.year = year
         this.month = month + 1
         this.day = day
-        sun.value = SunObject(loc, year, month, day, 0)
+        sun.value = SunObject(loc, this.year, this.month, this.day, 0)
 
     }
 
