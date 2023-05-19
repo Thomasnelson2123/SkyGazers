@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 
@@ -57,7 +58,7 @@ class SecondFragment : Fragment() {
     private lateinit var sensor: Sensors
     private lateinit var accelerometerValuesTextView: TextView
     private lateinit var magneticFieldValuesTextView: TextView
-    var sun: SunObject? = null
+    var suns: ArrayList<SunObject?>? = ArrayList()
 
 
 
@@ -188,11 +189,11 @@ class SecondFragment : Fragment() {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
                 viewModel.updateTime(progress) // updates the sun's time
-                sun = viewModel.getSunObject().value
+                suns = viewModel.getSunObject().value
 //                sunPos = viewModel.updateTime(progress)
 //                binding.curAzimuth.text = sunPos[1].toString()
 //                binding.curElevation.text = sunPos[0].toString()
-                val el = sun?.elevation ?: 0f
+                val el = suns?.get(0)?.elevation ?: 0f
                 if (el < 10 && el > 0){
                     //sunset / sunrise
                     sunImg.setImageResource(R.drawable.sunset);
@@ -211,8 +212,8 @@ class SecondFragment : Fragment() {
 
 
         viewModel.getSunObject().observe(viewLifecycleOwner) {
-            sun = it
-            sun?.updateHour(0)
+            suns = it
+            suns?.get(0)?.updateHour(0)
         }
 
 //        setUpPosLoop()
@@ -269,13 +270,17 @@ class SecondFragment : Fragment() {
     }
 
     fun getScreenCoords(azimuth: Float, elevation: Float): Pair<Float, Float> {
+
         // Get the screen dimensions
         val displayMetrics = Resources.getSystem().displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
 
-        val sunAz = sun?.azimuth ?: 0f
-        val sunEl = sun?.elevation ?: 0f
+        if(suns?.isEmpty() == true) {
+            return Pair(0.0f,0.0f)
+        }
+        val sunAz = suns?.get(0)?.azimuth ?: 0f
+        val sunEl = suns?.get(0)?.elevation ?: 0f
 
         Log.d("Sun Angles", "azim:" + sunAz + "elev" + sunEl)
         var offset = 0f;

@@ -1,6 +1,7 @@
 package com.example.skygazers
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,8 @@ class SecondActivityViewModel: ViewModel() {
     lateinit var elevAzimuth: DoubleArray
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
-    val sun = MutableLiveData<SunObject>()
+    val suns: MutableLiveData<ArrayList<SunObject?>> = MutableLiveData<ArrayList<SunObject?>>()
+
 
 
     fun updateLatLong(loc: Location, year: Int, month: Int, day: Int) {
@@ -24,16 +26,20 @@ class SecondActivityViewModel: ViewModel() {
         this.year = year
         this.month = month + 1
         this.day = day
-        sun.value = SunObject(loc, this.year, this.month, this.day, 0)
+        val sun = SunObject(loc, this.year, this.month, this.day, 0)
+        suns.value?.add(sun)
+        Log.d("Array checking", suns.value.toString())
+        Log.d("Array checking", sun.toString())
 
     }
 
     fun updateTime(hour: Int){
-        sun.value?.updateHour(hour)
+        // THIS IS WRONG FIX LATER
+        suns.value?.get(0)?.updateHour(hour)
     }
 
-    fun getSunObject(): LiveData<SunObject?> {
-        return this.sun
+    fun getSunObject(): LiveData<ArrayList<SunObject?>> {
+        return this.suns
     }
 
     /*fun createImgOverlay(x: Int, y: Int) {
