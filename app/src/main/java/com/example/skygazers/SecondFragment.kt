@@ -7,6 +7,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
@@ -20,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.camera.core.Camera
@@ -60,6 +63,9 @@ class SecondFragment : Fragment() {
     private lateinit var magneticFieldValuesTextView: TextView
     var suns: ArrayList<SunObject?>? = ArrayList()
 
+    private lateinit var container: FrameLayout
+    private lateinit var imageView: ImageView
+    private lateinit var canvasView: CanvasView
 
 
     var isRunning: Boolean = false
@@ -182,7 +188,7 @@ class SecondFragment : Fragment() {
 
 
         val seek = binding.seekBar;
-        val sunImg = binding.sunPicture;
+        //val sunImg = binding.sunPicture;
         seek?.setOnSeekBarChangeListener(object:
         SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -196,12 +202,13 @@ class SecondFragment : Fragment() {
                 val el = suns?.get(0)?.elevation ?: 0f
                 if (el < 10 && el > 0){
                     //sunset / sunrise
-                    sunImg.setImageResource(R.drawable.sunset);
+                    //sunImg.setImageResource(R.drawable.sunset);
                 } else {
                     //day
-                    sunImg.setImageResource(R.drawable.sun);
+                    //sunImg.setImageResource(R.drawable.sun);
                 }
             }
+
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
@@ -209,6 +216,13 @@ class SecondFragment : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
+        container = view.findViewById(R.id.container)
+        //imageView = view.findViewById(R.id.sunPicture)
+
+
+        canvasView = CanvasView(requireContext())
+        container.addView(canvasView)
 
 
         viewModel.getSunObject().observe(viewLifecycleOwner) {
@@ -260,16 +274,16 @@ class SecondFragment : Fragment() {
 
     fun displaySun(azimuth: Float, elevation: Float) {
         val coords = getScreenCoords(azimuth, elevation, 0)
-        Log.d("MyTag", "" + coords.first + ", " + coords.second)
 
-        binding.sunPicture.setX(coords.first)
-        binding.sunPicture.setY(coords.second)
+
+//        binding.sunPicture.setX(suns?.get(0)?.xpos ?: 0f)
+//        binding.sunPicture.setY(suns?.get(0)?.ypos ?: 0f)
 
 
 
     }
 
-    fun getScreenCoords(azimuth: Float, elevation: Float, index: Int): Pair<Float, Float> {
+    fun getScreenCoords(azimuth: Float, elevation: Float, index: Int) {
 
         // Get the screen dimensions
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -277,7 +291,7 @@ class SecondFragment : Fragment() {
         val screenHeight = displayMetrics.heightPixels
 
         if(suns?.isEmpty() == true) {
-            return Pair(0.0f,0.0f)
+            return
         }
         val sunAz = suns?.get(index)?.azimuth ?: 0f
         val sunEl = suns?.get(index)?.elevation ?: 0f
@@ -291,9 +305,8 @@ class SecondFragment : Fragment() {
         val x = (((sunAz - (azimuth + offset - (horizonalAngle / 2))) * screenWidth) / horizonalAngle).toFloat()
         val y = screenHeight - (((sunEl - (elevation - (verticalAngle / 2))) * screenHeight) / verticalAngle).toFloat()
 
-        return Pair(x, y)
-
-
+        suns?.get(index)?.xpos = x
+        suns?.get(index)?.ypos = y
 
     }
 

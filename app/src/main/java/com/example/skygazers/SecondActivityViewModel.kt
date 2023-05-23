@@ -26,12 +26,16 @@ class SecondActivityViewModel: ViewModel() {
         this.year = year
         this.month = month + 1
         this.day = day
-        val sun = SunObject(loc, this.year, this.month, this.day, 0)
-        var array = ArrayList<SunObject?>(1)
-        array.add(sun)
+        var array = ArrayList<SunObject?>(24)
+
+        for(i in 0..23){
+            val sun = SunObject(loc, this.year, this.month, this.day, i)
+            array.add(sun)
+        }
+
         suns.value = array
-        Log.d("Array checking", suns.value.toString())
-        Log.d("Array checking", sun.toString())
+        //Log.d("Array checking", suns.value.toString())
+        //Log.d("Array checking", sun.toString())
 
     }
 

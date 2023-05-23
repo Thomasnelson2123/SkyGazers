@@ -7,8 +7,8 @@ class SunObject(var loc: Location, var year: Int, var month: Int, var day: Int, 
     var azimuth: Float
     var elevation: Float
     var img: ImageView? = null
-    var xpos = 0
-    var ypos = 0
+    var xpos = 0f
+    var ypos = 0f
     val sunPosCode = SunPosition(loc.latitude, loc.longitude, -7)
 
     init {
