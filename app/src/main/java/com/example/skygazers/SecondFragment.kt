@@ -187,8 +187,8 @@ class SecondFragment : Fragment() {
                 viewModel.updateTime(progress) // updates the sun's time
                 suns = viewModel.getSunObject().value
 //                sunPos = viewModel.updateTime(progress)
-//                binding.curAzimuth.text = sunPos[1].toString()
-//                binding.curElevation.text = sunPos[0].toString()
+                binding.curAzimuth.text = suns?.get(progress)?.azimuth.toString()
+                binding.curElevation.text = suns?.get(progress)?.elevation.toString()
                 canvasView.updateHour(progress)
                 val el = suns?.get(0)?.elevation ?: 0f
                 if (el < 10 && el > 0){
@@ -277,11 +277,13 @@ class SecondFragment : Fragment() {
     }
 
     fun displaySun(azimuth: Float, elevation: Float) {
-        getScreenCoords(azimuth, elevation, 0)
+        for (i in 0 .. 23) {
+            getScreenCoords(azimuth, elevation, i)
+        }
         if(suns?.isEmpty() == true) {
             return
         }
-//        canvasView.setSuns(suns!!)
+        canvasView.setSuns(suns!!)
         canvasView.setSunCoords(suns?.get(0)?.xpos, suns?.get(0)?.ypos)
 
 

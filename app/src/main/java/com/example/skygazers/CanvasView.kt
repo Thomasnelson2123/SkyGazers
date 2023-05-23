@@ -18,6 +18,7 @@ class CanvasView(context: Context) : View(context) {
     private var startY = 0f
     private var endX = 0f
     private var endY = 0f
+    private var currHour = 0
 
     private var suns = ArrayList<SunObject?>()
 
@@ -34,12 +35,13 @@ class CanvasView(context: Context) : View(context) {
     }
 
     fun updateHour(hour: Int) {
+        currHour = hour
         if(suns.isEmpty()) {
             return
         }
         Log.d("sun status", suns.get(8)?.azimuth.toString())
         xPosition = suns.get(hour)?.xpos?.toInt() ?: 0
-        yPosition = suns.get(hour)?.xpos?.toInt() ?: 0
+        yPosition = suns.get(hour)?.ypos?.toInt() ?: 0
     }
 
     fun setSunCoords(x: Float?, y: Float?){
@@ -75,10 +77,17 @@ class CanvasView(context: Context) : View(context) {
         drawable.setBounds(xPosition, yPosition, xPosition+100, yPosition+100);
         // Draw the image at the specified position
 
-        this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), xPosition+600f, yPosition+600f, paint)
+        if(suns.isEmpty() || currHour == 0) {
+            return
+        }
+
+        this.canvas.drawLine(suns.get(currHour-1)!!.xpos+50, suns.get(currHour-1)!!.ypos+50, xPosition+ 50f, yPosition + 50f, paint)
+        this.canvas.drawLine(xPosition + 50f, yPosition + 50f, suns.get(currHour+1)!!.xpos+50, suns.get(currHour+1)!!.ypos+50, paint)
 
         drawable.draw(this.canvas)
-        drawable.setBounds(xPosition+500, yPosition+500, xPosition+600, yPosition+600)
+        drawable.setBounds(suns.get(currHour+1)?.xpos?.toInt()!!, suns.get(currHour+1)?.ypos?.toInt()!!, suns.get(currHour+1)?.xpos?.toInt()!!+100, suns.get(currHour+1)?.ypos?.toInt()!!+100)
+        drawable.draw(this.canvas)
+        drawable.setBounds(suns.get(currHour-1)?.xpos?.toInt()!!, suns.get(currHour-1)?.ypos?.toInt()!!, suns.get(currHour-1)?.xpos?.toInt()!!+100, suns.get(currHour-1)?.ypos?.toInt()!!+100)
         drawable.draw(this.canvas)
 
 
