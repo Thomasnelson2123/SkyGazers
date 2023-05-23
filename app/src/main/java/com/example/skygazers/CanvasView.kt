@@ -4,9 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
 
 class CanvasView(context: Context) : View(context) {
 
@@ -20,6 +19,8 @@ class CanvasView(context: Context) : View(context) {
     private var endX = 0f
     private var endY = 0f
 
+    private var suns = ArrayList<SunObject?>()
+
 
 
     init {
@@ -28,10 +29,27 @@ class CanvasView(context: Context) : View(context) {
 
     }
 
-    fun setSunCoords(x: Int, y: Int){
+    fun setSuns(suns: ArrayList<SunObject?>) {
+        this.suns = suns
+    }
+
+    fun updateHour(hour: Int) {
+        if(suns.isEmpty()) {
+            return
+        }
+        Log.d("sun status", suns.get(8)?.azimuth.toString())
+        xPosition = suns.get(hour)?.xpos?.toInt() ?: 0
+        yPosition = suns.get(hour)?.xpos?.toInt() ?: 0
+    }
+
+    fun setSunCoords(x: Float?, y: Float?){
         //invalidate()
-        this.xPosition = x;
-        this.yPosition = y;
+        if (x != null) {
+            this.xPosition = x.toInt()
+        };
+        if (y != null) {
+            this.yPosition = y.toInt()
+        };
 
     }
     fun drawLine(startX: Float, startY: Float, endX: Float, endY: Float){

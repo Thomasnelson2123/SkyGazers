@@ -18,6 +18,7 @@ class SecondActivityViewModel: ViewModel() {
     lateinit var sunrise: IntArray
     lateinit var sunset: IntArray
     val suns: MutableLiveData<ArrayList<SunObject?>> = MutableLiveData<ArrayList<SunObject?>>()
+    var array = ArrayList<SunObject?>(24)
 
 
 
@@ -26,7 +27,6 @@ class SecondActivityViewModel: ViewModel() {
         this.year = year
         this.month = month + 1
         this.day = day
-        var array = ArrayList<SunObject?>(24)
 
         for(i in 0..23){
             val sun = SunObject(loc, this.year, this.month, this.day, i)

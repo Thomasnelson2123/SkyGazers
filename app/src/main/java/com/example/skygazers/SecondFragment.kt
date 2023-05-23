@@ -7,15 +7,11 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.opengl.Matrix
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,22 +26,15 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
 import kotlinx.coroutines.*
-import java.util.*
-import kotlinx.coroutines.flow.MutableSharedFlow
 import java.lang.Runnable
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
 import java.util.Timer
 
 
@@ -200,6 +189,7 @@ class SecondFragment : Fragment() {
 //                sunPos = viewModel.updateTime(progress)
 //                binding.curAzimuth.text = sunPos[1].toString()
 //                binding.curElevation.text = sunPos[0].toString()
+                canvasView.updateHour(progress)
                 val el = suns?.get(0)?.elevation ?: 0f
                 if (el < 10 && el > 0){
                     //sunset / sunrise
@@ -225,19 +215,15 @@ class SecondFragment : Fragment() {
         canvasView = CanvasView(requireContext())
         container.addView(canvasView)
 
-        coroutineScope.launch {
-            for(i in 0..10){
-                canvasView.drawLine(i*30f, i*30f, i*30f, (i*30)+400f)
-
-                canvasView.setSunCoords(i*30, i*30)
-
-                delay(900)
-            }
-        }
-
-
-
-
+//        coroutineScope.launch {
+//            for(i in 0..10){
+//                canvasView.drawLine(i*30f, i*30f, i*30f, (i*30)+400f)
+//
+//                canvasView.setSunCoords(i*30, i*30)
+//
+//                delay(900)
+//            }
+//        }
 
 
 
@@ -291,7 +277,12 @@ class SecondFragment : Fragment() {
     }
 
     fun displaySun(azimuth: Float, elevation: Float) {
-        val coords = getScreenCoords(azimuth, elevation, 0)
+        getScreenCoords(azimuth, elevation, 0)
+        if(suns?.isEmpty() == true) {
+            return
+        }
+//        canvasView.setSuns(suns!!)
+        canvasView.setSunCoords(suns?.get(0)?.xpos, suns?.get(0)?.ypos)
 
 
 //        binding.sunPicture.setX(suns?.get(0)?.xpos ?: 0f)
