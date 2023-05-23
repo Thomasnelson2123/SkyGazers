@@ -259,7 +259,7 @@ class SecondFragment : Fragment() {
     }
 
     fun displaySun(azimuth: Float, elevation: Float) {
-        val coords = getScreenCoords(azimuth, elevation)
+        val coords = getScreenCoords(azimuth, elevation, 0)
         Log.d("MyTag", "" + coords.first + ", " + coords.second)
 
         binding.sunPicture.setX(coords.first)
@@ -269,7 +269,7 @@ class SecondFragment : Fragment() {
 
     }
 
-    fun getScreenCoords(azimuth: Float, elevation: Float): Pair<Float, Float> {
+    fun getScreenCoords(azimuth: Float, elevation: Float, index: Int): Pair<Float, Float> {
 
         // Get the screen dimensions
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -279,8 +279,8 @@ class SecondFragment : Fragment() {
         if(suns?.isEmpty() == true) {
             return Pair(0.0f,0.0f)
         }
-        val sunAz = suns?.get(0)?.azimuth ?: 0f
-        val sunEl = suns?.get(0)?.elevation ?: 0f
+        val sunAz = suns?.get(index)?.azimuth ?: 0f
+        val sunEl = suns?.get(index)?.elevation ?: 0f
 
         Log.d("Sun Angles", "azim:" + sunAz + "elev" + sunEl)
         var offset = 0f;
