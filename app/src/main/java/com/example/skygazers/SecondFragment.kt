@@ -227,8 +227,9 @@ class SecondFragment : Fragment() {
 
         coroutineScope.launch {
             for(i in 0..10){
+                canvasView.drawLine(i*30f, i*30f, i*30f, (i*30)+400f)
 
-                canvasView.setCoordinates(i*30, i*30)
+                canvasView.setSunCoords(i*30, i*30)
 
                 delay(900)
             }
