@@ -36,16 +36,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.skygazers.databinding.FragmentSecondBinding
+import kotlinx.coroutines.*
 import java.util.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
+import java.util.Timer
 
 
 private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
@@ -219,10 +220,24 @@ class SecondFragment : Fragment() {
 
         container = view.findViewById(R.id.container)
         //imageView = view.findViewById(R.id.sunPicture)
-
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         canvasView = CanvasView(requireContext())
         container.addView(canvasView)
+
+        coroutineScope.launch {
+            for(i in 0..10){
+
+                canvasView.setCoordinates(i*30, i*30)
+
+                delay(900)
+            }
+        }
+
+
+
+
+
 
 
         viewModel.getSunObject().observe(viewLifecycleOwner) {
@@ -248,6 +263,8 @@ class SecondFragment : Fragment() {
         }
 
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
