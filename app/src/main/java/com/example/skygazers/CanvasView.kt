@@ -80,12 +80,12 @@ class CanvasView(context: Context) : View(context) {
         // Draw the image at the specified position
 
 
-        if(suns.isEmpty() || currHour == 0) {
+        if(suns.isEmpty()) {
             return
         }
 
-        this.canvas.drawLine(suns.get(currHour-1)!!.xpos, suns.get(currHour-1)!!.ypos, xPosition.toFloat(), yPosition.toFloat(), paint)
-        this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), suns.get(currHour+1)!!.xpos, suns.get(currHour+1)!!.ypos, paint)
+//        this.canvas.drawLine(suns.get(currHour-1)!!.xpos, suns.get(currHour-1)!!.ypos, xPosition.toFloat(), yPosition.toFloat(), paint)
+//        this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), suns.get(currHour+1)!!.xpos, suns.get(currHour+1)!!.ypos, paint)
 
         drawable.draw(this.canvas)
 //        for(i in 2..22) {
@@ -93,10 +93,10 @@ class CanvasView(context: Context) : View(context) {
 //            drawable.setBounds(suns.get(i)?.xpos?.toInt()!!, suns.get(i)?.ypos?.toInt()!!, suns.get(i)?.xpos?.toInt()!!+100, suns.get(i)?.ypos?.toInt()!!+100)
 //            drawable.draw(this.canvas)
 //        }
-        drawable.setBounds(suns.get(currHour+1)?.xpos?.toInt()!!- (size / 2), suns.get(currHour+1)?.ypos?.toInt()!!- (size / 2), suns.get(currHour+1)?.xpos?.toInt()!!+(size/2), suns.get(currHour+1)?.ypos?.toInt()!!+(size/2))
-        drawable.draw(this.canvas)
-        drawable.setBounds(suns.get(currHour-1)?.xpos?.toInt()!! - (size / 2), suns.get(currHour-1)?.ypos?.toInt()!! - (size / 2), suns.get(currHour-1)?.xpos?.toInt()!!+(size/2), suns.get(currHour-1)?.ypos?.toInt()!!+(size/2))
-        drawable.draw(this.canvas)
+//        drawable.setBounds(suns.get(currHour+1)?.xpos?.toInt()!!- (size / 2), suns.get(currHour+1)?.ypos?.toInt()!!- (size / 2), suns.get(currHour+1)?.xpos?.toInt()!!+(size/2), suns.get(currHour+1)?.ypos?.toInt()!!+(size/2))
+//        drawable.draw(this.canvas)
+//        drawable.setBounds(suns.get(currHour-1)?.xpos?.toInt()!! - (size / 2), suns.get(currHour-1)?.ypos?.toInt()!! - (size / 2), suns.get(currHour-1)?.xpos?.toInt()!!+(size/2), suns.get(currHour-1)?.ypos?.toInt()!!+(size/2))
+//        drawable.draw(this.canvas)
 
 
     }
