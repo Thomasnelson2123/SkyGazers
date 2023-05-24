@@ -304,16 +304,30 @@ class SecondFragment : Fragment() {
         if(suns?.isEmpty() == true) {
             return
         }
-        val sunAz = suns?.get(index)?.azimuth ?: 0f
-        val sunEl = suns?.get(index)?.elevation ?: 0f
+        var sunAz = suns?.get(index)?.azimuth ?: 0f
+        var sunEl = suns?.get(index)?.elevation ?: 0f
 
         Log.d("Sun Angles", "azim:" + sunAz + "elev" + sunEl)
-        var offset = 0f;
-        // solves the issue of the sun "jumping" as you go from angle ~360 to ~0
-        if (azimuth <= horizonalAngle / 2) {
-           offset = 360f;
+        var min = (azimuth - (horizonalAngle / 2))
+        if (min < 0) {
+            min += 360
         }
-        val x = (((sunAz - (azimuth + offset - (horizonalAngle / 2))) * screenWidth) / horizonalAngle).toFloat()
+        var max = (azimuth + (horizonalAngle / 2))
+//        if (sunAz < min ) {
+//            sunAz += 360
+//            max += 360
+//        }
+//        if (sunAz > max) {
+//            max+= 360
+//        }
+
+        var x = 0f
+        if (min <= max) {
+            x = (((sunAz - (min))) * screenWidth) / (max - min)
+        }
+        else {
+            x = (((sunAz - (min))) % 360 ) / (max - min + 360) * screenWidth
+        }
         val y = screenHeight - (((sunEl - (elevation - (verticalAngle / 2))) * screenHeight) / verticalAngle).toFloat()
 
         suns?.get(index)?.xpos = x
