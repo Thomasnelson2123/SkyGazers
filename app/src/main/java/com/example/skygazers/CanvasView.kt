@@ -76,7 +76,7 @@ class CanvasView(context: Context) : View(context) {
 
         val size = 100
 
-        drawable.setBounds(xPosition - (size / 2), yPosition - (size / 2), xPosition+(size / 2), yPosition+(size / 2));
+        //drawable.setBounds(xPosition - (size / 2), yPosition - (size / 2), xPosition+(size / 2), yPosition+(size / 2));
         // Draw the image at the specified position
 
 
@@ -84,20 +84,22 @@ class CanvasView(context: Context) : View(context) {
             return
         }
 
-        this.canvas.drawLine(suns.get(currHour-1)!!.xpos, suns.get(currHour-1)!!.ypos, xPosition.toFloat(), yPosition.toFloat(), paint)
-        this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), suns.get(currHour+1)!!.xpos, suns.get(currHour+1)!!.ypos, paint)
+        //this.canvas.drawLine(suns.get(currHour-1)!!.xpos, suns.get(currHour-1)!!.ypos, xPosition.toFloat(), yPosition.toFloat(), paint)
+        //this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), suns.get(currHour+1)!!.xpos, suns.get(currHour+1)!!.ypos, paint)
 
         drawable.draw(this.canvas)
-//        for(i in 2..22) {
-//            this.canvas.drawLine(suns.get(i)!!.xpos+50, suns.get(i)!!.ypos+50, suns.get(i+1)!!.xpos+50, suns.get(i+1)!!.ypos+50, paint)
-//            drawable.setBounds(suns.get(i)?.xpos?.toInt()!!, suns.get(i)?.ypos?.toInt()!!, suns.get(i)?.xpos?.toInt()!!+100, suns.get(i)?.ypos?.toInt()!!+100)
+        for(i in 2..22) {
+            this.canvas.drawLine(suns.get(i)!!.xpos+50, suns.get(i)!!.ypos+50, suns.get(i+1)!!.xpos+50, suns.get(i+1)!!.ypos+50, paint)
+            //drawable.setBounds(suns.get(i)?.xpos?.toInt()!!, suns.get(i)?.ypos?.toInt()!!, suns.get(i)?.xpos?.toInt()!!+100, suns.get(i)?.ypos?.toInt()!!+100)
 //            drawable.draw(this.canvas)
-//        }
-        drawable.setBounds(suns.get(currHour+1)?.xpos?.toInt()!!- (size / 2), suns.get(currHour+1)?.ypos?.toInt()!!- (size / 2), suns.get(currHour+1)?.xpos?.toInt()!!+(size/2), suns.get(currHour+1)?.ypos?.toInt()!!+(size/2))
-        drawable.draw(this.canvas)
-        drawable.setBounds(suns.get(currHour-1)?.xpos?.toInt()!! - (size / 2), suns.get(currHour-1)?.ypos?.toInt()!! - (size / 2), suns.get(currHour-1)?.xpos?.toInt()!!+(size/2), suns.get(currHour-1)?.ypos?.toInt()!!+(size/2))
-        drawable.draw(this.canvas)
+        }
+//        drawable.setBounds(suns.get(currHour+1)?.xpos?.toInt()!!- (size / 2), suns.get(currHour+1)?.ypos?.toInt()!!- (size / 2), suns.get(currHour+1)?.xpos?.toInt()!!+(size/2), suns.get(currHour+1)?.ypos?.toInt()!!+(size/2))
+//        drawable.draw(this.canvas)
+//        drawable.setBounds(suns.get(currHour-1)?.xpos?.toInt()!! - (size / 2), suns.get(currHour-1)?.ypos?.toInt()!! - (size / 2), suns.get(currHour-1)?.xpos?.toInt()!!+(size/2), suns.get(currHour-1)?.ypos?.toInt()!!+(size/2))
+//        drawable.draw(this.canvas)
 
+        drawable.setBounds(suns.get(currHour)?.xpos?.toInt()!!, suns.get(currHour)?.ypos?.toInt()!!, suns.get(currHour)?.xpos?.toInt()!!+100, suns.get(currHour)?.ypos?.toInt()!!+100)
+        drawable.draw(this.canvas)
 
     }
 }
