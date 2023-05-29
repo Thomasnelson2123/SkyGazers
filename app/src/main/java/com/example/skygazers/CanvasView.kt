@@ -9,8 +9,6 @@ import android.view.View
 
 class CanvasView(context: Context) : View(context) {
 
-    private var xPosition = 0
-    private var yPosition = 0
     private var paint = Paint()
     private lateinit var canvas: Canvas
 
@@ -40,20 +38,10 @@ class CanvasView(context: Context) : View(context) {
             return
         }
         Log.d("sun status", suns.get(8)?.azimuth.toString())
-        xPosition = suns.get(hour)?.xpos?.toInt() ?: 0
-        yPosition = suns.get(hour)?.ypos?.toInt() ?: 0
-    }
-
-    fun setSunCoords(x: Float?, y: Float?){
-        //invalidate()
-        if (x != null) {
-            this.xPosition = x.toInt()
-        };
-        if (y != null) {
-            this.yPosition = y.toInt()
-        };
 
     }
+
+
     fun drawLine(startX: Float, startY: Float, endX: Float, endY: Float){
 
         this.startX = startX
@@ -67,10 +55,6 @@ class CanvasView(context: Context) : View(context) {
         super.onDraw(canvas)
         this.canvas = canvas
         invalidate()
-
-        // Define the desired x and y screen positions
-        //val xPosition = 300
-        //val yPosition = 400
 
         val drawable = resources.getDrawable(R.drawable.sun)
 

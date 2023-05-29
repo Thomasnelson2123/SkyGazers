@@ -284,7 +284,6 @@ class SecondFragment : Fragment() {
             return
         }
         canvasView.setSuns(suns!!)
-        canvasView.setSunCoords(suns?.get(0)?.xpos, suns?.get(0)?.ypos)
 
 
 //        binding.sunPicture.setX(suns?.get(0)?.xpos ?: 0f)
@@ -313,14 +312,6 @@ class SecondFragment : Fragment() {
             min += 360
         }
         var max = (azimuth + (horizonalAngle / 2))
-//        if (sunAz < min ) {
-//            sunAz += 360
-//            max += 360
-//        }
-//        if (sunAz > max) {
-//            max+= 360
-//        }
-
         var x = 0f
         if (min <= max) {
             x = (((sunAz - (min))) * screenWidth) / (max - min)
