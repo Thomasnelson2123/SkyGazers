@@ -24,7 +24,7 @@ class CanvasView(context: Context) : View(context) {
 
     init {
         paint.strokeWidth = 8f
-        paint.color = Color.RED
+        paint.color = Color.BLACK
 
     }
 
@@ -72,10 +72,12 @@ class CanvasView(context: Context) : View(context) {
         //this.canvas.drawLine(xPosition.toFloat(), yPosition.toFloat(), suns.get(currHour+1)!!.xpos, suns.get(currHour+1)!!.ypos, paint)
 
         var SunsPathArray = ArrayList(suns)
+        var len = SunsPathArray.size
         var sortedSunsPathArray = SunsPathArray.sortedBy {it?.xpos}
-        for (i in 0 .. sortedSunsPathArray.size - 2) {
+        for (i in 0 .. len - 2) {
             this.canvas.drawLine(sortedSunsPathArray.get(i)!!.xpos+50, sortedSunsPathArray.get(i)!!.ypos+50, sortedSunsPathArray.get(i+1)!!.xpos+50, sortedSunsPathArray.get(i+1)!!.ypos+50, paint)
         }
+        //`this.canvas.drawLine(sortedSunsPathArray.get(len-1)!!.xpos+50, sortedSunsPathArray.get(len-1)!!.ypos+50, sortedSunsPathArray.get(0)!!.xpos+50, sortedSunsPathArray.get(0)!!.ypos+50, paint)
        drawable.draw(this.canvas)
 //        for(i in 2..22) {
 //            this.canvas.drawLine(suns.get(i)!!.xpos+50, suns.get(i)!!.ypos+50, suns.get(i+1)!!.xpos+50, suns.get(i+1)!!.ypos+50, paint)

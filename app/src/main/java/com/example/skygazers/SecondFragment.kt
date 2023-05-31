@@ -184,7 +184,6 @@ class SecondFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val curTime =seekBar?.progress.toString()
                 binding.curNum.text = curTime
-                viewModel.updateTime(progress) // updates the sun's time
                 suns = viewModel.getSunObject().value
 //                sunPos = viewModel.updateTime(progress)
                 binding.curAzimuth.text = suns?.get(progress)?.azimuth.toString()

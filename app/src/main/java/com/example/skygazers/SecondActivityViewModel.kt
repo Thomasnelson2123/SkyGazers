@@ -39,10 +39,6 @@ class SecondActivityViewModel: ViewModel() {
 
     }
 
-    fun updateTime(hour: Int){
-        // THIS IS WRONG FIX LATER
-        suns.value?.get(0)?.updateHour(hour)
-    }
 
     fun getSunObject(): LiveData<ArrayList<SunObject?>> {
         return this.suns
